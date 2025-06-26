@@ -3,9 +3,11 @@ import './ProductList.css';
 
 interface ProductListProps {
   products: Product[];
+  onDeleteProduct: (id: number) => void;
+  onEditProduct: (product: Product) => void;
 }
 
-const ProductList: React.FC<ProductListProps> = ({ products }) => {
+const ProductList: React.FC<ProductListProps> = ({ products, onDeleteProduct, onEditProduct }) => {
 
   return (
     <div className="product-list">
@@ -16,6 +18,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
             <th>ID</th>
             <th>Name</th>
             <th>Price</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -24,6 +27,10 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
               <td>{product.id}</td>
               <td>{product.name}</td>
               <td>${product.price}</td>
+              <td>
+                <button onClick={() => onEditProduct(product)}>Edit</button>
+                <button onClick={() => onDeleteProduct(product.id)}>Delete</button>
+              </td>
             </tr>
           ))}
         </tbody>

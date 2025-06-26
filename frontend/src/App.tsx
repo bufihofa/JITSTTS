@@ -14,7 +14,9 @@ const App = () => {
     { id: 2, name: 'Samsung Galaxy S24', price: 1100 },
     { id: 3, name: 'Google Pixel 8', price: 900 },
   ]);
-  
+  const [editingProduct, setEditingProduct] = useState<Product>();
+
+
   const handleAddProduct = (name: string, price: number) => {
     const newProduct: Product = {
       id: Date.now(), 
@@ -23,15 +25,35 @@ const App = () => {
     };
     setProducts([...products, newProduct]);
   };
-
+  const handleDeleteProduct = (id: number) => {
+    setProducts(products.filter(product => product.id !== id));
+    if (editingProduct && editingProduct.id === id) {
+      setEditingProduct(undefined);
+    }
+  };
+  const handleUpdateProduct = (updatedProduct: Product) => {
+    setProducts(products.map(product => 
+      product.id === updatedProduct.id ? updatedProduct : product
+    ));
+    setEditingProduct(undefined);
+  };
   return (
     <div className="app-container">
       <Sidebar />
       <div className="main-content">
         <Header />
         <main className="content-area">
-          <ProductForm onAddProduct={handleAddProduct}/>
-          <ProductList products={products} />
+          <ProductForm 
+            onAddProduct={handleAddProduct} 
+            onUpdateProduct={handleUpdateProduct}
+            editingProduct={editingProduct}
+            
+          />
+          <ProductList 
+            products={products} 
+            onDeleteProduct={handleDeleteProduct}
+            onEditProduct={(product) => setEditingProduct(product)}
+          />
         </main>
       </div>
     </div>
