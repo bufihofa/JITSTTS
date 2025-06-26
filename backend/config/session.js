@@ -8,7 +8,7 @@
  * For all available options, see:
  * https://sailsjs.com/config/session
  */
-
+require('dotenv').config();
 module.exports.session = {
 
   /***************************************************************************
@@ -18,7 +18,7 @@ module.exports.session = {
   * of your users, forcing them to log in again.                             *
   *                                                                          *
   ***************************************************************************/
-  secret: '669a66573bcb47b07739d061c3944a9a',
+  secret: process.env.SESSION_SECRET,
 
 
   /***************************************************************************

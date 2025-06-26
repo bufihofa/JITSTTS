@@ -34,4 +34,18 @@ module.exports.routes = {
   ***************************************************************************/
 
 
+  //AUTH
+  'POST /api/auth/register':    {action: 'auth/register'},
+  'POST /api/auth/login':       {action: 'auth/login'},
+
+  //PRODUCT
+  'GET /api/product/list':      {action: 'product/list'},
+  'POST /api/product/create':   {action: 'product/create'},
+  'PATCH /api/product/update':  {action: 'product/update'},
+  'DELETE /api/product/delete': {action: 'product/delete'},
+
+  //USER
+  'GET /api/user/list':         {action: 'user/list'},
+  'GET /api/user/block/:id':    {action: 'user/block'},
+  'GET /api/user/unblock/:id':  {action: 'user/unblock'},
 };
