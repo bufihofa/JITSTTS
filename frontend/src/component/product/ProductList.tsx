@@ -1,11 +1,11 @@
+import type { Product } from '../../types/Product';
 import './ProductList.css'; 
 
-const ProductList = () => {
-  const products = [
-    { id: 1, name: 'iPhone 15 Pro', price: 1200 },
-    { id: 2, name: 'Samsung Galaxy S24', price: 1100 },
-    { id: 3, name: 'Google Pixel 8', price: 900 },
-  ];
+interface ProductListProps {
+  products: Product[];
+}
+
+const ProductList: React.FC<ProductListProps> = ({ products }) => {
 
   return (
     <div className="product-list">
