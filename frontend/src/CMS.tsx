@@ -7,7 +7,7 @@ const CMSApp: React.FC = () => {
   return (
     <Routes>
       <Route path="login" element={<LoginPage/>} />
-
+      <Route path="/" element={<div>About</div>} />
 
       <Route 
         path="/*" 

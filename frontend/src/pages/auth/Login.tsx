@@ -43,7 +43,7 @@ const LoginPage = () => {
             const response = await login(username, password);
             console.log(response.status);
             if (response.status === 200) {
-                window.location.href = '/'; 
+                window.location.href = '/home'; 
             } else {
                 setErrorMessage(response || "Đăng nhập thất bại");
             }
@@ -56,7 +56,7 @@ const LoginPage = () => {
             const response = await register(username, email, password);
             console.log(response.status);
             if (response.status === 200) {
-                window.location.href = '/'; 
+                window.location.href = '/home'; 
             } else {
                 setErrorMessage(response || "Đăng ký thất bại");
             }
