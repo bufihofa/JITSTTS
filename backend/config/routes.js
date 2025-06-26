@@ -33,6 +33,7 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+  'GET /api/ping': {action: 'ping'}, 
 
   //AUTH
   'POST /api/auth/register':    {action: 'auth/register'},
