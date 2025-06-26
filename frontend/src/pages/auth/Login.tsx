@@ -1,6 +1,6 @@
 import { useState } from "react";
 import './Auth.css';
-import { register } from "../../api/auth";
+import { login, register } from "../../api/auth";
 
 const LoginPage = () => {
 
@@ -8,6 +8,8 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [activeTab, setActiveTab] = useState<boolean>(true); // 
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const selectTab = () => {
     return (
@@ -28,6 +30,42 @@ const LoginPage = () => {
         ></div>
       </div>
     );
+  }
+  const handleSubmit = async () => {
+    setErrorMessage('');
+    if (!username || !password || (!activeTab && !email)) {
+        setErrorMessage("Vui lòng điền đầy đủ thông tin.");
+        return;
+    }
+    setLoading(true);
+    if (activeTab) {
+        try {
+            const response = await login(username, password);
+            console.log(response.status);
+            if (response.status === 200) {
+                window.location.href = '/'; 
+            } else {
+                setErrorMessage(response || "Đăng nhập thất bại");
+            }
+        } catch (error: any) {
+            setErrorMessage(error.message || "Đăng nhập thất bại");
+        } 
+    }
+    else {
+        try {
+            const response = await register(username, email, password);
+            console.log(response.status);
+            if (response.status === 200) {
+                window.location.href = '/'; 
+            } else {
+                setErrorMessage(response || "Đăng ký thất bại");
+            }
+        } catch (error: any) {
+            setErrorMessage(error.message || "Đăng ký thất bại");
+        }
+    }
+    setLoading(false);
+    
   }
   const loginForm = () => {
     return (
@@ -54,35 +92,8 @@ const LoginPage = () => {
                     onChange={(e) => setPassword(e.target.value)} 
                 />
             </div>
-        </form>
-    );
-  }
-  const registerForm = () => {
-    return (
-        <form className="login-form">
-            <div className="login-input">
-                <label className="form-label">Username</label>
-                <br />
-                <input 
-                    className="form-input"
-                    type="text" 
-                    value={username} 
-                    placeholder="Enter your username"
-                    onChange={(e) => setUsername(e.target.value)} 
-                />
-            </div>
-            <div className="login-input">
-                <label className="form-label">Password</label>
-                <br />
-                <input 
-                    className="form-input"
-                    type="password" 
-                    value={password} 
-                    placeholder="Enter your password"
-                    onChange={(e) => setPassword(e.target.value)} 
-                />
-            </div>
-            <div className="login-input">
+            {!activeTab && (
+                <div className="login-input">
                 <label className="form-label">Email</label>
                 <br />
                 <input 
@@ -93,10 +104,11 @@ const LoginPage = () => {
                     onChange={(e) => setEmail(e.target.value)} 
                 />
             </div>
-            
+            )}
         </form>
     );
   }
+  
   return (
     <div className="login-page">
         <div className="login-container" >
@@ -109,9 +121,11 @@ const LoginPage = () => {
             </div>
             {selectTab()}
             
-            {activeTab? loginForm() : registerForm()}
-
-            <button className="submit-btn" type="submit">{activeTab? `Đăng nhập`:`Đăng ký`}</button>
+            {loginForm()}
+            <p className={errorMessage ? "error-message" : "loading-message"}>
+                {errorMessage || `${loading ? "Đang xử lý..." : "---"}`} 
+            </p>
+            <button className="submit-btn" onClick={handleSubmit}>{activeTab? `Đăng nhập`:`Đăng ký`}</button>
         </div>
     </div>
   );

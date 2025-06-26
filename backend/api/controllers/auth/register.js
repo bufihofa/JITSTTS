@@ -16,6 +16,7 @@ module.exports = {
     },
     badRequest: {
         description: 'Invalid register credentials.',
+        statusCode: 400,
     },
     },
 

@@ -11,11 +11,13 @@ export const login = async (username: string, password: string) => {
         storage.setToken(response.data.token); 
 
         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-        
         return response;
 
     } catch (error: any) {
-        const message = error.response?.data?.message || "Đăng nhập thất bại";
+        let message = error.response?.data?.message || "Đăng nhập thất bại";
+        if(message.length > 100) {
+            message = "Thông tin đăng nhập không hợp lệ";
+        }
         console.log(message);
         return message;
         
@@ -36,8 +38,11 @@ export const register = async (username: string, email: string, password: string
 
         return response;
     } catch (error: any) {
-        const message = error.response?.data?.message || "Đăng ký thất bại";
+        let message = error.response?.data?.message || "Đăng ký thất bại";
         console.log(message);
+        if(message.length > 100) {
+            message = "Thông tin đăng ký không hợp lệ";
+        }
         return message;
     }
 }
