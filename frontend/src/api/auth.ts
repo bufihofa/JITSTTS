@@ -8,7 +8,7 @@ export const login = async (username: string, password: string) => {
             { username, password }
         );
         console.log("Login response:", response.data);
-        storage.setToken(response.data.token); 
+        storage.setLoginData(response.data.token, response.data.user.role, response.data.user.username);
 
         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
         return response;
@@ -32,7 +32,7 @@ export const register = async (username: string, email: string, password: string
             { username, email, password }
         );
         console.log("Register response:", response.data);
-        storage.setToken(response.data.token);
+        storage.setLoginData(response.data.token, response.data.user.role, response.data.user.username);
 
         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
 
@@ -52,11 +52,16 @@ export const register = async (username: string, email: string, password: string
 export const logout = async () => {
     try {
         window.location.href = '/login';
-        storage.setToken(''); 
+        storage.clearLoginData();
         axiosInstance.defaults.headers.common['Authorization'] = '';
     } catch (error: any) {
         const message = error.response?.data?.message || "Đăng xuất thất bại";
         console.log(message);
         return message;
     }
+}
+
+export const isAdmin = () => {
+    const role = storage.getRole();
+    return role === 'admin';
 }

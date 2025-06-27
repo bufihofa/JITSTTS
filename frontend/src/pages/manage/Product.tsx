@@ -1,9 +1,37 @@
+import { useEffect, useState } from "react";
+import { getProductList } from "../../api/product";
+import './Manage.css';
+import ProductList from "../../component/product/ProductList";
 const ProductManagePage: React.FC = () => {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    const loadProducts = async () => {
+      setLoading(true);
+      const productList = await getProductList();
+      console.log("Product list:", productList);
+      setProducts(productList);
+      setLoading(false);
+    }
+    loadProducts();
+  }, []);
+  
   return (
-    <div>
-      <h1>Product Management</h1>
-      <p>This is the product management page.</p>
-    </div>
+    <>
+      <div className="page-header">
+        <p>Product Management</p>
+      </div>
+      <ProductList 
+        products={products} 
+        onDeleteProduct={(id: number) => {
+          setProducts(products.filter(product => product.id !== id));
+        }} 
+        onEditProduct={(product: any) => {
+          console.log("Edit product:", product);
+        }}
+      />
+    </>
   );
 }
 export default ProductManagePage;

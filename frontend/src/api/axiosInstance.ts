@@ -2,7 +2,7 @@ import axios from "axios";
 import storage from "../utils/storage";
 
 
-const baseURL = 'http://localhost:1337';
+const baseURL = import.meta.env.VITE_BASE_URL || "https://jitstts.onrender.com";
 
 export const axiosInstance = axios.create({
     baseURL: baseURL,
@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(
     },
     (error) => {
         if (error.response && error.response.status === 401) {
-            storage.setToken(''); 
+            storage.clearLoginData();
             window.location.href = '/login'; 
         }
         return Promise.reject(error);

@@ -16,4 +16,4 @@ const CMSRoutes: React.FC = () => {
     </CMSLayout>
   );
 }
-export default CMSRoutes;
+export default CMSRoutes;   

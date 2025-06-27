@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import './Auth.css';
 import { login, register } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-
+  const navigate = useNavigate();
+  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -54,7 +56,7 @@ const LoginPage = () => {
             const response = await login(username, password);
             console.log(response.status);
             if (response.status === 200) {
-                window.location.href = '/home'; 
+                navigate('/home'); 
             } else {
                 setErrorMessage(response || "Đăng nhập thất bại");
             }
@@ -67,7 +69,7 @@ const LoginPage = () => {
             const response = await register(username, email, password);
             console.log(response.status);
             if (response.status === 200) {
-                window.location.href = '/home'; 
+                navigate('/home'); 
             } else {
                 setErrorMessage(response || "Đăng ký thất bại");
             }
