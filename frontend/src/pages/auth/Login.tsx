@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import './Auth.css';
 import { login, register } from "../../api/auth";
 
@@ -10,7 +10,18 @@ const LoginPage = () => {
   const [activeTab, setActiveTab] = useState<boolean>(true); // 
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [shakeForm, setShakeForm] = useState<boolean>(false);
+  const formRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    if (errorMessage) {
+      setShakeForm(true);
+      const timer = setTimeout(() => {
+        setShakeForm(false);
+      }, 600); // Match animation duration
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
   const selectTab = () => {
     return (
       <div className="tab-container">
@@ -69,7 +80,7 @@ const LoginPage = () => {
   }
   const loginForm = () => {
     return (
-        <form className="login-form">
+        <form className="login-form ">
             <div className="login-input">
                 <label className="form-label">Username</label>
                 <br />
@@ -111,7 +122,10 @@ const LoginPage = () => {
   
   return (
     <div className="login-page">
-        <div className="login-container" >
+        <div 
+          className={`login-container ${shakeForm ? 'shake-animation' : ''}`}
+          ref={formRef}
+        >
             <div className="login-header">
                 <div className="logo">
                     <img src="/bh_logo.png" alt="Logo" />

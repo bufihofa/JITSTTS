@@ -1,4 +1,4 @@
 const Header = () => {
-  return <header className="app-header">My CMS</header>;
+  return <header className="app-header">HEADER</header>;
 }
 export default Header;

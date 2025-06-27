@@ -8,8 +8,8 @@ const CMSRoutes: React.FC = () => {
         <Routes>
             <Route path="home" element={<div>Home</div>} />
 
-            <Route path="product" element={<ProductManagePage   />} />
-            <Route path="user" element={<div>User</div>} />
+            <Route path="products" element={<ProductManagePage   />} />
+            <Route path="users" element={<div>User</div>} />
 
             <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
