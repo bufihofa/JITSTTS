@@ -19,7 +19,6 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': { view: 'pages/homepage' },
 
 
   /***************************************************************************
@@ -49,4 +48,11 @@ module.exports.routes = {
   'GET /api/user/list':         {action: 'user/list'},
   'GET /api/user/block/:id':    {action: 'user/block'},
   'GET /api/user/unblock/:id':  {action: 'user/unblock'},
+
+  'GET /*': { 
+    skipAssets: true,
+    fn: function(req, res) {
+      return res.sendFile(require('path').resolve(sails.config.appPath, 'assets/index.html'));
+    }
+  }
 };

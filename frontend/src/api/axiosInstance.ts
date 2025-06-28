@@ -2,7 +2,7 @@ import axios from "axios";
 import storage from "../utils/storage";
 
 
-const baseURL = import.meta.env.VITE_BASE_URL || "https://jitstts.onrender.com";
+const baseURL = "";
 
 export const axiosInstance = axios.create({
     baseURL: baseURL,

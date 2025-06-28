@@ -30,7 +30,7 @@ module.exports.security = {
 
    cors: {
     allRoutes: true,
-    allowOrigins: ['http://localhost:5173','http://localhost:5174', 'http://localhost:8080', 'http://localhost:8000'], 
+    allowOrigins: ['http://localhost:5173','http://localhost:5174', 'http://localhost:8080', 'http://localhost:8000', 'https://jitscms.netlify.app', 'http://jitscms.netlify.app', 'https://jitstts.onrender.com','http://jitstts.onrender.com'], 
     allowCredentials: true,
     allowRequestHeaders: 'content-type,authorization'
   },
