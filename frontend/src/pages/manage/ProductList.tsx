@@ -23,6 +23,8 @@ const ProductList: React.FC = () => {
   useEffect(() => {
     const loadProducts = async () => {
       setLoading(true);
+      console.log(loading);
+      setItemPerPage(10);
       const productList = await getProductList();
       console.log("Product list:", productList);
       setProducts(productList);
@@ -32,7 +34,7 @@ const ProductList: React.FC = () => {
   }, []);
 
   useEffect(() => {
-      goToPage(currentPage);
+    goToPage(currentPage);
   }, [products, currentPage, itemPerPage]);
   
   const handleSelectProduct = (productId: number) => {
@@ -100,7 +102,7 @@ const ProductList: React.FC = () => {
               ))}
             {currentProducts && currentProducts.length < itemPerPage && (
               Array.from({ length: itemPerPage - currentProducts.length }).map((_, index) => (
-                <tr className="row empty-row">
+                <tr key={`${index}`} className="empty-row">
                   <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                 </tr>
               )))

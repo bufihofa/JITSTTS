@@ -82,7 +82,7 @@ body {
   display: flex;
   flex-direction: column;
   padding: 3% 3% 1% 4%;
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 0.2s ease-in-out;
   overflow: auto;
   height: 90%;
 }
