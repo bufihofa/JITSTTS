@@ -30,8 +30,10 @@ body {
   color: #6c757d;
   padding-left: 20px;
   margin-left: 1px;
-  height: 8%;
+  height: 50px;
+  border-radius:  0px 10px 0px 0px;
   box-shadow: 1px 2px 5px rgba(43, 84, 88, 0.1);
+  
 }
 
 .main-content {
@@ -62,6 +64,7 @@ body {
 }
 .app-sidebar {
   width: 15%;
+  min-width: 60px;
   background-color: #ffffff;
   border-radius: 10px 0px 0px 15px;
   box-shadow: 1px 0px 1px rgba(43, 84, 88, 0.3);
@@ -78,7 +81,7 @@ body {
 .content-area {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 3% 3% 1% 4%;
   animation: fadeIn 0.5s ease-in-out;
   overflow: auto;
   height: 90%;
@@ -90,14 +93,14 @@ body {
   justify-content: center;
   align-items: center;
   margin: 20px;
-  height: 100px;
+  height: 111px;
 }
 .logo-sidebar-close{
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 20px;
-  height: 100px;
+  height: 111px;
   transition: all 0.3s ease-in-out;
 }
 .logo-sidebar-img{
@@ -145,6 +148,7 @@ body {
   transition: all 0.2s ease;
   border-left: 3px solid transparent;
   transform: scale(1);
+  transition: all 0.2s ease-in-out;
   
 }
 
@@ -157,10 +161,12 @@ body {
 .sidebar-link:hover:not(.active) {
   background-color: #eef4fa;
   color: #7EB8E3;
+  transition: all 0.2s ease-in-out;
 }
 .sidebar-link.active:hover {
   background-color: #eef4fa;
   color: #427ca8;
+  transition: all 0.2s ease-in-out;
 }
 
 .sidebar-icon{
