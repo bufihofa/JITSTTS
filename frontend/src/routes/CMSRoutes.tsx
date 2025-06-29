@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import ProductManagePage from "../pages/manage/Product";
 import CMSLayout from "../component/layout/CMSLayout";
+import ProductList from "../pages/manage/ProductList";
 
 const CMSRoutes: React.FC = () => {
   return (
@@ -8,7 +8,7 @@ const CMSRoutes: React.FC = () => {
         <Routes>
             <Route path="home" element={<div>Home</div>} />
 
-            <Route path="products" element={<ProductManagePage   />} />
+            <Route path="products" element={<ProductList   />} />
             <Route path="users" element={<div>User</div>} />
 
             <Route path="*" element={<Navigate to="/home" replace />} />
