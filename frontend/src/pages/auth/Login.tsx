@@ -22,7 +22,7 @@ const LoginPage = () => {
       setShakeForm(true);
       const timer = setTimeout(() => {
         setShakeForm(false);
-      }, 600); // Match animation duration
+      }, 600); 
       return () => clearTimeout(timer);
     }
   }, [errorMessage]);
@@ -74,6 +74,7 @@ const LoginPage = () => {
             <CMSInput 
               label="Mật khẩu"
               value={password}
+              type="password"
               onChange={setPassword}
             />
             {!activeTab && (
