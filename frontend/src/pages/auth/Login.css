@@ -23,12 +23,13 @@
     padding-bottom: 16px;
 }
 .login-form {
-    padding: 0px 30px 0px 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 220px;
     justify-content: center;
+    animation: fadeIn 0.4s ease-in;
+    margin: 0px 30px;
 }
 
 
@@ -64,31 +65,8 @@
 .shake-animation {
   animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
 }
-.form-input {
-    padding: 8px 12px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 12px;
-    color: #374151;
-    background-color: #f9fafb;
-    transition: all 0.3s ease-in-out;
-    outline: none;
-    margin-bottom: 16px;
-    width: 90%;
-}
 
-.form-input:focus {
-    border-color: #93c5fd;
-    background-color: #ffffff;
-    box-shadow: 0 0 0 4px rgba(147, 197, 253, 0.1);
-}
 
-.form-input::placeholder {
-    color: #9ca3af;
-}
-.login-input {
-    width: 100%;
-}
 .form-label {
     font-size: 13px;
     font-weight: 600;
@@ -116,7 +94,7 @@
 
 .active-tab {
   color: #4a90a4;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .tab-indicator {
@@ -135,7 +113,6 @@ button {
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 500;
   font-family: inherit;
   cursor: pointer;
   

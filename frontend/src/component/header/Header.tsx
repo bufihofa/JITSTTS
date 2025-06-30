@@ -1,7 +1,7 @@
 const Header = () => {
   return (
     <div className="cms-header">
-      <header>HEADER</header>;
+      <header></header>
     </div>
   )
 }

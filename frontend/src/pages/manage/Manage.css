@@ -85,6 +85,7 @@ tr{
 }
 .empty-row{
   height: 30px;
+  animation: fadeIn 0.1s ease-in-out;
 }
 .row:hover {
   background-color: rgba(233, 248, 253, 0.633);

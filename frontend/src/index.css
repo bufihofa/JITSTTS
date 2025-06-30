@@ -51,3 +51,12 @@ h1 {
     background-color: #f9f9f9;
   }
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

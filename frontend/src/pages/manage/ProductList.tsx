@@ -1,23 +1,26 @@
 import { useEffect, useState } from "react";
-import { deleteProduct, getProductList } from "../../api/product";
+import { createProduct, deleteProduct, editProduct, getProductList } from "../../api/product";
 import './Manage.css';
 import { FaBoxArchive } from "react-icons/fa6";
 import type { Product } from "../../types/Product";
+import ProductForm from "../../component/product/ProductForm";
 
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
-
+  
   const isAllSelected = selectedProducts.length === products.length && products.length > 0;
   
   const [currentPage, setCurrentPage] = useState(1);
   const [itemPerPage, setItemPerPage] = useState(10);
   const [currentProducts, setCurrentProducts] = useState<Product[] | null>();
-  const goToPage = (page: number) => {
-    setCurrentPage(page);
-    setCurrentProducts(products.slice((page - 1) * itemPerPage, page * itemPerPage));
-  }
+
+  const [isFormOpen, setFormOpen] = useState(false);
+
+  const [editingProduct, setEdittingProduct] = useState<Product>();
+  
+  
 
   
   useEffect(() => {
@@ -26,7 +29,6 @@ const ProductList: React.FC = () => {
       console.log(loading);
       setItemPerPage(10);
       const productList = await getProductList();
-      console.log("Product list:", productList);
       setProducts(productList);
       setLoading(false);
     }
@@ -36,7 +38,18 @@ const ProductList: React.FC = () => {
   useEffect(() => {
     goToPage(currentPage);
   }, [products, currentPage, itemPerPage]);
+
+
+
   
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    setCurrentProducts(products.slice((page - 1) * itemPerPage, page * itemPerPage));
+  }
+
+
+
+  // SELECT
   const handleSelectProduct = (productId: number) => {
     setSelectedProducts(prev => 
       prev.includes(productId) 
@@ -49,6 +62,9 @@ const ProductList: React.FC = () => {
         ? [] : products.map(product => product.id)
   )};
 
+
+
+  // DEL
   const handleDeleteProduct = async (id: number[]) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       await deleteProduct(id);
@@ -57,17 +73,71 @@ const ProductList: React.FC = () => {
     }
   }
 
-  const handleEditProduct = (product: any) => {
-    console.log("Edit product:", product);
+
+  // ADD
+  const onAddButton = () => {
+    setEdittingProduct(undefined);
+    setFormOpen(true);
+  }
+  const handleAddProduct = async (product: any) => {
+    setFormOpen(false);
+    const productTemp: Product = 
+      {
+        id: product.id, 
+        name: product.name, 
+        price: Number(product.price) || 0, 
+        quantity: Number(product.quantity) || 0, 
+        tag: product.tag 
+      }
+    const productR = await createProduct([productTemp]);
+    if (productR) setProducts([...products, ...productR]);
+    
   }
 
+
+  //EDIT
+  const onEditButton = (product: any) => {
+    setEdittingProduct(product);
+    setFormOpen(true);
+  }
+  const handleEditProduct = async (product: any) => {
+    setFormOpen(false);
+    const productTemp: Product =
+      {
+        id: product.id, 
+        name: product.name, 
+        price: Number(product.price) || 0, 
+        quantity: Number(product.quantity) || 0, 
+        tag: product.tag 
+      }
+    const productR = await editProduct([productTemp]);
+    if (productR) setProducts(prev => prev.map(p => p.id === productTemp.id ? productTemp : p));
+    
+  }
+  
+  const handleCloseForm = () => {
+    setEdittingProduct(undefined);
+    setFormOpen(false);
+  }
   
   return (
+    <>
+      {isFormOpen &&
+        (
+          <ProductForm
+            onAddProduct={handleAddProduct}
+            onEditProduct={handleEditProduct}
+            onCloseForm={handleCloseForm}
+            editingProduct={editingProduct}
+          />
+        )
+      }
       <div className="product-list">
         <div className="product-list-header">
           <FaBoxArchive className ="product-list-icon"/> 
           <div className="product-list-title">Storage</div> 
           <div className="product-list-actions">
+            <button className="button-add" onClick={() => onAddButton()}>Add Item</button>
             <button className="button-delete" onClick={() => handleDeleteProduct(selectedProducts)}>Delete Selected</button>
           </div>
         </div>
@@ -95,7 +165,7 @@ const ProductList: React.FC = () => {
                   <td>{product.quantity || 0}</td>
                   <td>{product.tag || 'N/A'}</td>
                   <td>
-                    <button className="button-edit" onClick={() => handleEditProduct(product)}>Ed</button>
+                    <button className="button-edit" onClick={() => onEditButton(product)}>Ed</button>
                     <button className="button-delete" onClick={() => handleDeleteProduct([product.id])}>De</button>
                   </td>
                 </tr>
@@ -119,7 +189,8 @@ const ProductList: React.FC = () => {
           </div>
         </div>
       </div>
-    );
+    </>
+  );
 }
 
 export default ProductList;

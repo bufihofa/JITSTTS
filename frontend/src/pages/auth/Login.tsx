@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import './Auth.css';
+import './Login.css';
 import { login, register } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
+import CMSInput from "../../component/common/Input";
+import SelectTab from "../../component/common/SelectTab";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -24,26 +26,7 @@ const LoginPage = () => {
       return () => clearTimeout(timer);
     }
   }, [errorMessage]);
-  const selectTab = () => {
-    return (
-      <div className="tab-container">
-        <button 
-          className={`select-login ${activeTab ? 'active-tab' : ''}`}
-          onClick={() => setActiveTab(true)}
-        >
-          Đăng nhập</button>
-        <button 
-          className={`select-register ${!activeTab ? 'active-tab' : ''}`}
-          onClick={() => setActiveTab(false)}
-        >
-          Đăng ký</button>
-        <div 
-          className="tab-indicator" 
-          style={{ transform: activeTab ? 'translateX(0)' : 'translateX(100%)' }}
-        ></div>
-      </div>
-    );
-  }
+
   const handleSubmit = async () => {
     setErrorMessage('');
     if (!username || !password || (!activeTab && !email)) {
@@ -82,41 +65,24 @@ const LoginPage = () => {
   }
   const loginForm = () => {
     return (
-        <form className="login-form ">
-            <div className="login-input">
-                <label className="form-label">Username</label>
-                <br />
-                <input 
-                    className="form-input"
-                    type="text" 
-                    value={username} 
-                    placeholder="Enter your username"
-                    onChange={(e) => setUsername(e.target.value)} 
-                />
-            </div>
-            <div className="login-input">
-                <label className="form-label">Password</label>
-                <br />
-                <input 
-                    className="form-input"
-                    type="password" 
-                    value={password} 
-                    placeholder="Enter your password"
-                    onChange={(e) => setPassword(e.target.value)} 
-                />
-            </div>
+        <form className="login-form" key={activeTab ? 'login' : 'register'}>
+            <CMSInput 
+              label="Tên đăng nhập"
+              value={username}
+              onChange={setUsername}
+            />
+            <CMSInput 
+              label="Mật khẩu"
+              value={password}
+              onChange={setPassword}
+            />
             {!activeTab && (
-                <div className="login-input">
-                <label className="form-label">Email</label>
-                <br />
-                <input 
-                    className="form-input"
-                    type="email" 
-                    value={email} 
-                    placeholder="Enter your email"
-                    onChange={(e) => setEmail(e.target.value)} 
+                <CMSInput
+                  label="Email"
+                  type="email"
+                  value={email}
+                  onChange={setEmail}
                 />
-            </div>
             )}
         </form>
     );
@@ -135,7 +101,12 @@ const LoginPage = () => {
                 
                 <div className="logo-subtext">Inventory Management</div>
             </div>
-            {selectTab()}
+            <SelectTab
+              leftTab="Đăng nhập"
+              rightTab="Đăng ký"
+              isLeft={activeTab}
+              setLeft={setActiveTab}
+            />
             
             {loginForm()}
             <p className={errorMessage ? "error-message" : "loading-message"}>

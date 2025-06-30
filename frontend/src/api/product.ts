@@ -4,7 +4,6 @@ import { axiosInstance } from "./axiosInstance";
 export const getProductList = async () => {
     try {
         const response = await axiosInstance.get('/api/product/list');
-        console.log("Product list fetched successfully:", response.data);
         return response.data.products; 
     } catch (error: any) {
         console.error("Error fetching product list:", error);
@@ -13,21 +12,25 @@ export const getProductList = async () => {
 }
 export const createProduct = async (products: Product[]) => {
     try {
-        console.log("Creating product list:", products);
-        return;
         const response = await axiosInstance.post('/api/product/create', { products });
-        console.log("Product list fetched successfully:", response.data);
         return response.data.products; 
     } catch (error: any) {
         console.error("Error fetching product list:", error);
         throw new Error(error.response?.data?.message || "Failed to fetch product list");
     }
 }
+export const editProduct = async (products: any[]) => {
+    try {
+        const response = await axiosInstance.patch('/api/product/update', { products });
+        return response.data.finalProducts; 
+    } catch (error: any) {
+        console.error("Error editing product:", error);
+        throw new Error(error.response?.data?.message || "Failed to edit product");
+    }
+}
 export const deleteProduct = async (products: number[]) => {
     try {
-        console.log("Deleting products:", {products});
         const response = await axiosInstance.delete(`/api/product/delete`, { data: {products} });
-        console.log("Product deleted successfully:", response.data);
         return response.data;
     } catch (error: any) {
         console.error("Error deleting product:", error);

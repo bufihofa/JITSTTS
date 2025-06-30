@@ -38,12 +38,12 @@ module.exports = {
   },
 
   fn: async function (inputs, exits) {
-
     for (let product of inputs.products) {
       product.owner = this.req.user.id; 
+      product.id = undefined;
     }
-    await Product.createEach(inputs.products);
-    return exits.success({ message: 'Create Product OK', products: inputs.products });
+    const done = await Product.createEach(inputs.products).fetch();
+    return exits.success({ message: 'Create Product OK', products: done });
 
   }
 
