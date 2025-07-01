@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createProduct, deleteProduct, editProduct, getProductList } from "../../api/product";
 import './Manage.css';
 import { FaBoxArchive } from "react-icons/fa6";
 import type { Product } from "../../types/Product";
 import ProductForm from "../../component/product/ProductForm";
-
+import { MdEdit, MdDelete } from "react-icons/md";
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -14,13 +14,14 @@ const ProductList: React.FC = () => {
   
   const [currentPage, setCurrentPage] = useState(1);
   const [itemPerPage, setItemPerPage] = useState(10);
-  const [currentProducts, setCurrentProducts] = useState<Product[] | null>();
 
   const [isFormOpen, setFormOpen] = useState(false);
 
   const [editingProduct, setEdittingProduct] = useState<Product>();
   
-  
+  const currentProducts = useMemo(() => {
+    return products.slice((currentPage - 1) * itemPerPage, currentPage * itemPerPage);
+  }, [products, currentPage, itemPerPage]);
 
   
   useEffect(() => {
@@ -28,23 +29,19 @@ const ProductList: React.FC = () => {
       setLoading(true);
       console.log(loading);
       setItemPerPage(10);
-      const productList = await getProductList();
-      setProducts(productList);
+      setProducts(await getProductList());
       setLoading(false);
     }
     loadProducts();
   }, []);
 
-  useEffect(() => {
-    goToPage(currentPage);
-  }, [products, currentPage, itemPerPage]);
+  
 
 
 
   
   const goToPage = (page: number) => {
     setCurrentPage(page);
-    setCurrentProducts(products.slice((page - 1) * itemPerPage, page * itemPerPage));
   }
 
 
@@ -74,12 +71,16 @@ const ProductList: React.FC = () => {
   }
 
 
-  // ADD
+  // ADD & EDIT
   const onAddButton = () => {
     setEdittingProduct(undefined);
     setFormOpen(true);
   }
-  const handleAddProduct = async (product: any) => {
+  const onEditButton = (product: any) => {
+    setEdittingProduct(product);
+    setFormOpen(true);
+  }
+  const handleSave = async (product: any, isEdit = false) => {
     setFormOpen(false);
     const productTemp: Product = 
       {
@@ -89,44 +90,61 @@ const ProductList: React.FC = () => {
         quantity: Number(product.quantity) || 0, 
         tag: product.tag 
       }
-    const productR = await createProduct([productTemp]);
-    if (productR) setProducts([...products, ...productR]);
+    if (isEdit) {
+      const productR = await editProduct([productTemp]);
+      if (productR) setProducts(prev => prev.map(p => p.id === productTemp.id ? productTemp : p));
+    }
+    else {
+      const productR = await createProduct([productTemp]);
+      if (productR) setProducts([...products, ...productR]);
+    }
+  }
     
-  }
-
-
-  //EDIT
-  const onEditButton = (product: any) => {
-    setEdittingProduct(product);
-    setFormOpen(true);
-  }
-  const handleEditProduct = async (product: any) => {
-    setFormOpen(false);
-    const productTemp: Product =
-      {
-        id: product.id, 
-        name: product.name, 
-        price: Number(product.price) || 0, 
-        quantity: Number(product.quantity) || 0, 
-        tag: product.tag 
-      }
-    const productR = await editProduct([productTemp]);
-    if (productR) setProducts(prev => prev.map(p => p.id === productTemp.id ? productTemp : p));
-    
-  }
   
   const handleCloseForm = () => {
     setEdittingProduct(undefined);
     setFormOpen(false);
   }
   
+  const totalPages = useMemo(() => {
+    console.log("products.length", products.length, "itemPerPage", itemPerPage);
+    return Math.ceil(products.length / itemPerPage);
+  }, [products.length, itemPerPage]);
+
+  const paginationControls = useMemo(() => {
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+    console.log("totalPages", totalPages, "currentPage", currentPage, "startPage", startPage, "endPage", endPage);
+    if (endPage - startPage + 1 < 5) {
+      if (startPage === 1) {
+        endPage = Math.min(5, totalPages);
+      } else if (endPage === totalPages) {
+        startPage = Math.max(1, totalPages - 4);
+      }
+    }
+    
+    const pages = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages.map(page => (
+      <button 
+        key={page}
+        className={`page-button ${currentPage === page ? 'active-page' : ''}`}
+        disabled={currentPage === page}
+        onClick={() => goToPage(page)}
+      >
+        {page}
+      </button>
+    ));
+  }, [currentPage, totalPages]);
+
   return (
     <>
       {isFormOpen &&
         (
           <ProductForm
-            onAddProduct={handleAddProduct}
-            onEditProduct={handleEditProduct}
+            onSave={handleSave}
             onCloseForm={handleCloseForm}
             editingProduct={editingProduct}
           />
@@ -149,7 +167,7 @@ const ProductList: React.FC = () => {
                 <th className="select-all-header">
                   <input type="checkbox" className="select-all" checked={isAllSelected} onChange={handleSelectAll} />
                 </th>
-                <th>ID</th><th>Product</th><th>Price</th><th>Quantity</th><th>Tag</th><th></th>
+                <th>ID</th><th>Sản phẩm</th><th>Giá</th><th>Số lượng</th><th>Tag</th><th></th>
               </tr>
             </thead>
 
@@ -165,8 +183,8 @@ const ProductList: React.FC = () => {
                   <td>{product.quantity || 0}</td>
                   <td>{product.tag || 'N/A'}</td>
                   <td>
-                    <button className="button-edit" onClick={() => onEditButton(product)}>Ed</button>
-                    <button className="button-delete" onClick={() => handleDeleteProduct([product.id])}>De</button>
+                    <button className="button-edit-row" onClick={() => onEditButton(product)}><MdEdit/></button>
+                    <button className="button-delete-row" onClick={() => handleDeleteProduct([product.id])}><MdDelete/></button>
                   </td>
                 </tr>
               ))}
@@ -184,8 +202,9 @@ const ProductList: React.FC = () => {
         <div className="product-list-footer">
           <div className="footer-text">
             {products.length} {products.length === 1 ? 'product' : 'products'} found
-            <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1}>Previous</button>
-            <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === Math.ceil(products.length / itemPerPage)}>Next</button>
+            <button className="page-button" onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1}>❮</button>
+            {paginationControls}
+            <button className="page-button" onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>❯</button>
           </div>
         </div>
       </div>

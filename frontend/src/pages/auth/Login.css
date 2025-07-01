@@ -5,20 +5,20 @@
     justify-content: center;
     height: 100vh;
     width: 100vw;
-    background-color: #EEF7FD;
+    background-color: var(--cms-container-color);
 }
 .login-container {
     width: 300px;
-    background-color: #fff;
+    background-color: var(--bg-primary);
     border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.3),
-                0 8px 32px rgba(31, 38, 135, 0.3);
+    box-shadow: 0 8px 32px var(--app-container-glow-color),
+                0 8px 32px var(--app-container-glow-color);
     display: flex;
     flex-direction: column;
 }
 .login-header {
     text-align: center;
-    background-color: #EAF6FD;
+    background-color: var(--bg-accent);
     border-radius: 16px 16px 0 0;
     padding-bottom: 16px;
 }
@@ -38,17 +38,17 @@
 .logo-text {
     font-size: 32px;
     font-weight: 700;
-    background: linear-gradient(135deg, #4a90a4 0%, #87ceeb 100%);
+    background: linear-gradient(135deg, var(--bg-logo-gradient-start) 0%, var(--bg-logo-gradient-end) 100%);
 
 }
 .logo-subtext {
     font-size: 15px;
-    color: #6b7280;
+    color: var(--text-logo);
     font-weight: 400;
 }
 
 .logo img{
-    background: linear-gradient(135deg, #87cfebb8 0%, #b0d3d8a7 100%);
+    background: linear-gradient(135deg, var(--logo-gradient-start) 0%, var(--logo-gradient-end) 100%);
     padding: 10px;
     border-radius: 10px;
     width: 32px;
@@ -70,7 +70,7 @@
 .form-label {
     font-size: 13px;
     font-weight: 600;
-    color: #374151;
+    color: var(--text-primary);
 }
 
 .tab-container {
@@ -126,31 +126,31 @@ button:hover {
     margin-left: 80px;
     margin-right: 80px;
     margin-bottom: 10px;
-    background: linear-gradient(135deg, #70d0f6 0%, #36a5d1 100%);
-    color: rgb(255, 255, 255);
+    background: linear-gradient(135deg, var(--bg-button-gradient-start) 0%, var(--bg-button-gradient-end) 100%);
+    color: #ffffff;
     border: none;
     border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(135, 206, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 16px var(--shadow-button), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transition: all 0.3s ease-in-out;
     opacity: 0.8;
 }
 .submit-btn:hover {
-    color:rgb(0, 16, 61);
-    background: linear-gradient(135deg, #5fb3d4 0%, #83d4f4 100%);
     opacity: 1;
+    color: var(--bg-primary);
+    background: linear-gradient(135deg, var(--bg-button-gradient-start) 0%, var(--bg-button-gradient-end) 100%);
 }
 
 .input-error {
-  border: 1px solid #ff3b30;
+  border: 1px solid var(--text-error);
 }
 
 .error-text {
-  color: #ff3b30;
+  color: var(--text-error);
   font-size: 12px;
   margin-top: 4px;
 }
 .error-message {
-  color: #ff3b30;
+  color: var(--text-error);
   font-size: 12px;
   padding: 0px;
   margin: 0px;
@@ -158,7 +158,7 @@ button:hover {
   text-align: center;
 }
 .loading-message {
-  color: #4a90a4;
+  color: var(--text-success);
   font-size: 12px;
   padding: 0px;
   margin: 0px;

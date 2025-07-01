@@ -3,9 +3,8 @@ import type { Product } from "../../types/Product";
 import { IoCloseCircleSharp } from "react-icons/io5";import './ProductForm.css'
 import CMSInput from "../common/Input";
 import SelectTab from "../common/SelectTab";
-interface AddProductFormProps {
-    onAddProduct: (product: Product) => void;
-    onEditProduct: (product: Product) => void;
+interface AddProductFormProps { 
+    onSave: (product: Product, isEdit: boolean) => void;
     onCloseForm: () => void;
     editingProduct?:{
         id: number;
@@ -15,7 +14,7 @@ interface AddProductFormProps {
         quantity: number;
     }
 }
-const ProductForm: React.FC<AddProductFormProps> = ({onAddProduct, onEditProduct, onCloseForm, editingProduct}) => {
+const ProductForm: React.FC<AddProductFormProps> = ({onSave, onCloseForm, editingProduct}) => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState<number>(0);
     const [quantity, setQuantity] = useState<number>(0);
@@ -51,21 +50,21 @@ const ProductForm: React.FC<AddProductFormProps> = ({onAddProduct, onEditProduct
         }
 
         if (isEdit && editingProduct) {
-            onEditProduct({
+            onSave({
                 id: editingProduct.id,
                 name,
                 price,
                 quantity,
                 tag
-            });
+            }, true);
         } else {
-            onAddProduct({
+            onSave({
                 id: Date.now(), 
                 name,
                 price,
                 quantity,
                 tag
-            });
+            }, false);
         }
         
     }

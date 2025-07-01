@@ -3,17 +3,133 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  /* Theme variables - light theme by default */
+  --cms-container-color: #EEF7FD;
+  --app-container-color: #ffffff;
+  --layout-color: #ffffff;
+  --app-container-glow-color: rgba(31, 38, 135, 0.3);
+  
+  /* Text colors */
+  --text-primary: #374151;
+  --text-secondary: #6c757d;
+  --text-tertiary: #9ca3af;
+  --text-active: #427ca8;
+  --text-hover: #7EB8E3;
+  --text-error: #ff3b30;
+  --text-success: #4a90a4;
+  --text-table: rgb(51, 62, 67);
+  --text-logo: #6b7280;
+  
+  /* Background colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #eef4fa;
+  --bg-accent: #EAF6FD;
+  --bg-hover: #eef4fa;
+  --bg-active-gradient-start: #74dffc68;
+  --bg-active-gradient-end: #d3f2fe41;
+  --bg-button-gradient-start: #70d0f6;
+  --bg-button-gradient-end: #36a5d1;
+  --bg-logo-gradient-start: #4a90a4;
+  --bg-logo-gradient-end: #87ceeb;
+  --bg-selected-row: rgba(193, 195, 196, 0.17);
+  --bg-table-header: rgba(233, 248, 253, 0.897);
+  --bg-table-hover: rgba(233, 248, 253, 0.633);
+  --bg-page-button: rgba(235, 236, 237, 0.567);
+  --bg-active-page: #c8eeff;
+  
+  /* Border colors */
+  --border-primary: #e5e7eb;
+  --border-focus: #93c5fd;
+  --border-active: #7EB8E3;
+  --border-table: #f1f1f1;
+  --border-table-header: #cccbcb;
+  
+  /* Shadow colors */
+  --shadow-primary: rgba(43, 84, 88, 0.1);
+  --shadow-secondary: rgba(43, 84, 88, 0.3);
+  --shadow-focus: rgba(147, 197, 253, 0.1);
+  --shadow-button: rgba(135, 206, 235, 0.4);
+  
+  /* Special colors */
+  --logo-gradient-start: #87cfebb8;
+  --logo-gradient-end: #b0d3d8a7;
+  --delete-button: rgb(243, 137, 116);
+  --delete-button-hover: rgb(255, 0, 0);
+  --edit-button: rgb(88, 179, 224);
+  --edit-button-hover: rgb(25, 116, 213);
+  --logo-glow: rgba(0, 234, 255, 0.8);
+  --scrollbar-thumb: rgba(123, 158, 198, 0.722);
+  --scrollbar-thumb-hover: #a1a1a1;
+  --tab-indicator: #87ceeb;
+  
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-
+/* Dark theme */
+[data-theme="dark"] {
+  --cms-container-color: #0a0c10;
+  --app-container-color: #090b0f;
+  --layout-color: rgb(22, 28, 40);
+  --app-container-glow-color: #3031471d;
+  
+  /* Text colors */
+  --text-primary: #e1e1e1;
+  --text-secondary: #b0b8c1;
+  --text-tertiary: #8b8b8b;
+  --text-active: #7EB8E3;
+  --text-hover: #a0d0ff;
+  --text-error: #ff6b6b;
+  --text-success: #6bbecf;
+  --text-table: #c5c5c7;
+  --text-logo: #a3a9b1;
+  
+  /* Background colors */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2a2a2a;
+  --bg-tertiary: #333333;
+  --bg-accent: #2c3e50;
+  --bg-hover: #3a3a3a;
+  --bg-active-gradient-start: #2c5a7088;
+  --bg-active-gradient-end: #1d334e41;
+  --bg-button-gradient-start: #3d7ea8;
+  --bg-button-gradient-end: #265a7a;
+  --bg-logo-gradient-start: #3d7ea8;
+  --bg-logo-gradient-end: #6bbecf;
+  --bg-selected-row: rgba(70, 78, 95, 0.4);
+  --bg-table-header: rgba(29, 39, 53, 0.897);
+  --bg-table-hover: rgba(43, 54, 75, 0.633);
+  --bg-page-button: rgba(42, 45, 54, 0.567);
+  --bg-active-page: #2c5a70;
+  
+  /* Border colors */
+  --border-primary: #444444;
+  --border-focus: #5d82a1;
+  --border-active: #5d82a1;
+  --border-table: #333333;
+  --border-table-header: #4a4a4a;
+  
+  /* Shadow colors */
+  --shadow-primary: rgba(0, 0, 0, 0.3);
+  --shadow-secondary: rgba(0, 0, 0, 0.5);
+  --shadow-focus: rgba(93, 130, 161, 0.1);
+  --shadow-button: rgba(61, 126, 168, 0.4);
+  
+  /* Special colors */
+  --logo-gradient-start: #3d7ea888;
+  --logo-gradient-end: #265a7a87;
+  --delete-button: rgb(220, 53, 69);
+  --delete-button-hover: rgb(255, 0, 0);
+  --edit-button: rgb(40, 107, 143);
+  --edit-button-hover: rgb(25, 86, 157);
+  --logo-glow: rgba(61, 126, 168, 0.8);
+  --scrollbar-thumb: rgba(61, 79, 102, 0.722);
+  --scrollbar-thumb-hover: #5a5a5a;
+  --tab-indicator: #3d7ea8;
+}
 
 a {
   font-weight: 500;
@@ -21,7 +137,7 @@ a {
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #163d48;
 }
 
 body {
@@ -60,3 +176,4 @@ h1 {
     opacity: 1;
   }
 }
+

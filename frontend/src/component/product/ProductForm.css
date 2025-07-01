@@ -9,30 +9,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    
 }
 
 .product-form{
     border-radius: 10px;
-    background-color: white;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.3),
-                0 8px 32px rgba(31, 38, 135, 0.3);
-
+    background-color: var(--bg-primary);
+    box-shadow: 0 8px 32px var(--app-container-glow-color),
+                0 8px 32px var(--app-container-glow-color);
 }
 
 .product-form-header-text{
     font-family: inherit;
     font-size: 20px;
-    animation: fadeIn 0.3s easy-in;
+    animation: fadeIn 0.3s ease-in;
     margin-bottom: 0px;
     padding-bottom: 0px;
     margin-top: 0px;
 }
 .product-form-header-id{
     font-size: 13px;
-    animation: fadeIn 0.3s easy-in;
-    color: rgb(3, 71, 120);
+    animation: fadeIn 0.3s ease-in;
+    color: var(--text-active);
     padding: 0px;
     animation: fadeIn 0.5s ease-in;
 }
@@ -40,11 +37,10 @@
     border-radius: 10px;
     margin: 30px;
     width: 300px;
-    background-color: white;
-
+    background-color: var(--bg-primary);
 }
 .product-form-header {
-    background-color: #EAF6FD;
+    background-color: var(--bg-accent);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,7 +49,6 @@
     border-radius: 10px 10px 0px 0px;    
     position: relative;
     padding-top: 10px;
-    
 }
 
 .product-form-header-text {
@@ -70,5 +65,8 @@
     cursor: pointer;
     font-size: 20px;
     margin-right: 10px;
-    color: rgb(5, 100, 116);
+    color: var(--text-secondary);
+}
+.close-button:hover {
+    color: var(--text-error);
 }

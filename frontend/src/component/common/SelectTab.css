@@ -18,7 +18,7 @@
 }
 
 .active-tab {
-  color: #4a90a4;
+  color: var(--text-success);
   font-weight: 500;
 }
 
@@ -28,7 +28,7 @@
   left: 0;
   height: 3px;
   width: 50%;
-  background-color: #87ceeb;
+  background-color: var(--tab-indicator);
   transition: transform 0.3s ease-in-out;
   border-radius: 3px;
 }
@@ -40,9 +40,8 @@ button {
   font-size: 1em;
   font-family: inherit;
   cursor: pointer;
-  
 }
-button:hover {
-  color: #4a90a4;
 
+button:hover {
+  color: var(--text-success);
 }

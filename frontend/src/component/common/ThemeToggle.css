@@ -1,0 +1,49 @@
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  height: 20px;
+  width: 50px;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  background-color: red;
+}
+
+.theme-icon {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 2px;
+  transition: all 0.3s ease;
+}
+.theme-icon-light {
+  transition: all 0.3s ease;
+  transform: translateX(21px);
+}
+.theme-circle {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 2px;
+  transition: all 0.3s ease;
+}
+.theme-circle-light {
+  color: rgb(86, 241, 252);
+  transition: all 0.3s ease;
+  transform: translateX(-15px);
+}
+.theme-circle-dark {
+  transition: all 0.3s ease;
+  color: rgb(255, 255, 255);
+}
+.theme-icon-sun {
+  color: rgb(79, 255, 252);
+  transition: all 0.3s ease;
+}
+.theme-icon-moon {
+  color: rgb(255, 255, 255);
+  transition: all 0.3s ease;
+  
+}

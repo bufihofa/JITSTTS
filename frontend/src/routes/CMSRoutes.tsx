@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import CMSLayout from "../component/layout/CMSLayout";
+import CMSLayout from "../component/CMSLayout";
 import ProductList from "../pages/manage/ProductList";
 
 const CMSRoutes: React.FC = () => {

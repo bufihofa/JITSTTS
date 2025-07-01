@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import Header from "../header/Header";
-import Sidebar from "../sidebar/Sidebar";
+import Header from "./Header";
+import Sidebar from "./Sidebar";
 import './CMSLayout.css';
 const CMSLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();

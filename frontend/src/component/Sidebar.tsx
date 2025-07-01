@@ -1,7 +1,8 @@
 import React from "react";
 import { FaHouse, FaBoxArchive, FaUsers, FaCircleInfo   } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
-import { isAdmin } from "../../api/auth";
+import { isAdmin } from "../api/auth";
+import ThemeToggle from "./common/ThemeToggle";
 const Sidebar = () => {
     const [isOpen, setIsOpen] = React.useState(true);
         const toggleSidebar = () => {
@@ -41,6 +42,10 @@ const Sidebar = () => {
                         <span className="sidebar-text"><FaCircleInfo  className="sidebar-icon" /> About</span>
                     </NavLink>
                 </div>
+                
+            </div>
+            <div>
+                <ThemeToggle    />
             </div>
         </aside>
     )
