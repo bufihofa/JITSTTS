@@ -36,7 +36,7 @@
     padding: 0px;
     table-layout: fixed; 
     margin: 0px;
-    height: 80%;
+    height: 100%;
 }
 
 .product-table::-webkit-scrollbar {

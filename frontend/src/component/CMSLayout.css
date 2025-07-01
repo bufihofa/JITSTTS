@@ -61,6 +61,8 @@ body {
     transition: opacity 500ms;
 }
 .app-sidebar {
+    display: flex;
+    flex-direction: column;
     width: 15%;
     min-width: 60px;
     background-color: var(--layout-color);
@@ -69,6 +71,8 @@ body {
     transition: all 0.3s ease-in-out, background-color 0.001s ease;
 }
 .app-sidebar-close {
+    display: flex;
+    flex-direction: column;
     width: 60px;
     background-color: var(--layout-color);
     border-radius: 10px 0px 0px 15px;
@@ -175,6 +179,14 @@ body {
 }
 .sidebar-link:hover {
     font-size: 1.3rem;
+}
+.sidebar-footer {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid rgba(162, 158, 158, 0.253);
+    margin-top: auto;
+    padding-top: 16px;
+    margin-bottom: 20px;
 }
 .about-link {
     padding-top: 30px;

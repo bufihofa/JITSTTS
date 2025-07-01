@@ -10,7 +10,7 @@ const Sidebar = () => {
         setIsOpen(!isOpen);
     };
     return(
-        <aside className={`${isOpen ? 'app-sidebar' : 'app-sidebar-close'}`}>
+        <div className={`${isOpen ? 'app-sidebar' : 'app-sidebar-close'}`}>
             <div className={`${isOpen ? 'logo-sidebar' : 'logo-sidebar-close'}`}>
                 <img src="/bh_logo.png" alt="Logo" className="logo-sidebar-img" onClick={toggleSidebar} />
             </div>
@@ -44,10 +44,10 @@ const Sidebar = () => {
                 </div>
                 
             </div>
-            <div>
+            <div className="sidebar-footer">
                 <ThemeToggle    />
             </div>
-        </aside>
+        </div>
     )
 }
 

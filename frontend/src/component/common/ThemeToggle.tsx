@@ -23,7 +23,7 @@ const ThemeToggle: React.FC = () => {
   return (
     <>
       
-      <button className="theme-toggle" onClick={toggleTheme}>
+      <button className={`theme-toggle ${theme === 'light' ? '':'theme-toggle-dark'}`} onClick={toggleTheme}>
           <div className={`theme-icon ${theme === 'light' ? 'theme-icon-light' : 'theme-icon-dark'}`}>
               {theme === 'light' ? <MdOutlineWbSunny className="theme-icon-sun"  /> : <IoMoonOutline className="theme-icon-moon"/>}
           </div>
