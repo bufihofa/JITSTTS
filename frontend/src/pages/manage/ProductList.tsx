@@ -6,6 +6,9 @@ import type { Product } from "../../types/Product";
 import ProductForm from "../../component/product/ProductForm";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { GoCopy } from "react-icons/go";
+import SearchBar from "../../component/common/SearchBar";
+import { TbFilterSearch } from "react-icons/tb";
+import Button from "../../component/common/Button";
 
 
 
@@ -25,11 +28,22 @@ const ProductList: React.FC = () => {
 
   const [editingProduct, setEdittingProduct] = useState<Product>();
   
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const filteredProducts = useMemo(() => {
+    if (!searchQuery) return products;
+    return products.filter(product => 
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.tag?.toLowerCase().includes(searchQuery.toLowerCase())
+    );  
+  }, [products, searchQuery]);
+
   const currentProducts = useMemo(() => {
-    return products.slice((currentPage - 1) * itemPerPage, currentPage * itemPerPage);
-  }, [products, currentPage, itemPerPage]);
+    return filteredProducts.slice((currentPage - 1) * itemPerPage, currentPage * itemPerPage);
+  }, [filteredProducts, currentPage, itemPerPage]);
 
   
+
   useEffect(() => {
     const loadProducts = async () => {
       setLoading(true);
@@ -61,8 +75,8 @@ const ProductList: React.FC = () => {
 
   const handleSelectAll = () => {
     setSelectedProducts(prev => 
-      prev.length === products.length 
-        ? [] : products.map(product => product.id)
+      prev.length === filteredProducts.length 
+        ? [] : filteredProducts.map(product => product.id)
   )};
 
 
@@ -118,14 +132,12 @@ const ProductList: React.FC = () => {
   }
   
   const totalPages = useMemo(() => {
-    console.log("products.length", products.length, "itemPerPage", itemPerPage);
-    return Math.ceil(products.length / itemPerPage);
-  }, [products.length, itemPerPage]);
+    return Math.ceil(filteredProducts.length / itemPerPage);
+  }, [filteredProducts.length, itemPerPage]);
 
   const paginationControls = useMemo(() => {
     let startPage = Math.max(1, currentPage - 2);
     let endPage = Math.min(totalPages, currentPage + 2);
-    console.log("totalPages", totalPages, "currentPage", currentPage, "startPage", startPage, "endPage", endPage);
     if (endPage - startPage + 1 < 5) {
       if (startPage === 1) {
         endPage = Math.min(5, totalPages);
@@ -165,9 +177,22 @@ const ProductList: React.FC = () => {
         <div className="product-list-header">
           <FaBoxArchive className ="product-list-icon"/> 
           <div className="product-list-title">Storage</div> 
-          <div className="product-list-actions">
-            <button className="button-add" onClick={() => onAddButton()}>Add Item</button>
-            <button className="button-delete" onClick={() => handleDeleteProduct(selectedProducts)}>Delete Selected</button>
+            <div className="product-list-header-actions">
+              <div className="temp">
+              </div>
+
+              <div className="product-list-header-button">
+                <SearchBar
+                  value={searchQuery}
+                  onUpdateSearch={setSearchQuery}
+                />
+                <button className="header-button filter" onClick={() => onAddButton()}><TbFilterSearch /></button>
+                
+                <Button
+                  onAddButton={onAddButton}
+                  text="Add Product"
+                />
+              </div>
           </div>
         </div>
         <div className="product-table">
@@ -216,7 +241,7 @@ const ProductList: React.FC = () => {
         </div>
         <div className="product-list-footer">
           <div className="footer-text">
-            {products.length} {products.length === 1 ? 'product' : 'products'} found
+            {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'} found
             <button className="page-button" onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1}>❮</button>
             {paginationControls}
             <button className="page-button" onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>❯</button>
