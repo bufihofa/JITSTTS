@@ -58,6 +58,8 @@
   --delete-button-hover: rgb(255, 0, 0);
   --edit-button: rgb(88, 179, 224);
   --edit-button-hover: rgb(25, 116, 213);
+  --copy-button: rgb(74, 94, 97);
+  --copy-button-hover: rgb(60, 72, 85);
   --logo-glow: rgba(0, 234, 255, 0.8);
   --scrollbar-thumb: rgba(123, 158, 198, 0.722);
   --scrollbar-thumb-hover: #a1a1a1;

@@ -5,6 +5,12 @@ import { FaBoxArchive } from "react-icons/fa6";
 import type { Product } from "../../types/Product";
 import ProductForm from "../../component/product/ProductForm";
 import { MdEdit, MdDelete } from "react-icons/md";
+import { GoCopy } from "react-icons/go";
+
+
+
+
+
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -80,7 +86,7 @@ const ProductList: React.FC = () => {
     setEdittingProduct(product);
     setFormOpen(true);
   }
-  const handleSave = async (product: any, isEdit = false) => {
+  const handleSave = async (product: any, isEdit = false, isCopy = false) => {
     setFormOpen(false);
     const productTemp: Product = 
       {
@@ -96,7 +102,12 @@ const ProductList: React.FC = () => {
     }
     else {
       const productR = await createProduct([productTemp]);
-      if (productR) setProducts([...products, ...productR]);
+      if (productR){
+        if (isCopy) {
+          
+        }
+        setProducts([...products, ...productR]);
+      }
     }
   }
     
@@ -183,8 +194,12 @@ const ProductList: React.FC = () => {
                   <td>{product.quantity || 0}</td>
                   <td>{product.tag || 'N/A'}</td>
                   <td>
-                    <button className="button-edit-row" onClick={() => onEditButton(product)}><MdEdit/></button>
-                    <button className="button-delete-row" onClick={() => handleDeleteProduct([product.id])}><MdDelete/></button>
+                    <div className="product-list-actions">
+                      <button className="button-copy-row" onClick={() => handleSave(product, false, true)}><GoCopy/></button>
+                      <button className="button-edit-row" onClick={() => onEditButton(product)}><MdEdit/></button>
+                      <button className="button-delete-row" onClick={() => handleDeleteProduct([product.id])}><MdDelete/></button>
+                      
+                    </div>
                   </td>
                 </tr>
               ))}

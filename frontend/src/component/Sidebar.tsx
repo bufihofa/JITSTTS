@@ -27,6 +27,7 @@ const Sidebar = () => {
                         <span className="sidebar-text"><FaBoxArchive className="sidebar-icon" /> Products</span>
                     </NavLink>
                 </div>
+                
                 {isAdmin() && (
                     <div className="sidebar-item">
                     <NavLink to="/users" className="sidebar-link">
