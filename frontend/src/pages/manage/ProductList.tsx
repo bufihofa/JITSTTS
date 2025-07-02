@@ -32,6 +32,7 @@ const ProductList: React.FC = () => {
 
   const filteredProducts = useMemo(() => {
     if (!searchQuery) return products;
+    setCurrentPage(1); 
     return products.filter(product => 
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.tag?.toLowerCase().includes(searchQuery.toLowerCase())
