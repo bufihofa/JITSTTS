@@ -21,7 +21,6 @@ module.exports = {
     },
 
   fn: async function (inputs, exits) {
-    console.log(inputs);
     const { username, password } = inputs;
 
     if (!username || !password) {

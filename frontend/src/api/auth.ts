@@ -1,14 +1,30 @@
 import storage from "../utils/storage";
 import { axiosInstance } from "./axiosInstance";
 
-export const login = async (username: string, password: string) => {
+export const login = async (username: string, password: string, savePassword: boolean) => {
     try{
         
         const response = await axiosInstance.post('/api/auth/login', 
             { username, password }
         );
+
         console.log("Login response:", response.data);
-        storage.setLoginData(response.data.token, response.data.user.role, response.data.user.username);
+
+        storage.clearLoginData(); 
+        
+        storage.setLoginData(
+            response.data.token, 
+            response.data.user.role, 
+            response.data.user.username
+        );
+
+        if(savePassword) {
+            storage.saveLoginData(
+                response.data.token, 
+                response.data.user.role, 
+                response.data.user.username
+            );
+        } 
 
         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
         return response;

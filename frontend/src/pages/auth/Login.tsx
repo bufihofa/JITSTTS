@@ -4,10 +4,11 @@ import { login, register } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import CMSInput from "../../component/common/Input";
 import SelectTab from "../../component/common/SelectTab";
+import { useGoogleAuth } from "../../hooks/useGoogleAuth";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  
+  const googleLogin = useGoogleAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -15,6 +16,9 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [shakeForm, setShakeForm] = useState<boolean>(false);
+
+  const [savePassword, setSavePassword] = useState<boolean>(false);
+  
   const formRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -36,7 +40,7 @@ const LoginPage = () => {
     setLoading(true);
     if (activeTab) {
         try {
-            const response = await login(username, password);
+            const response = await login(username, password, savePassword);
             console.log(response.status);
             if (response.status === 200) {
                 navigate('/home'); 
@@ -77,14 +81,29 @@ const LoginPage = () => {
               type="password"
               onChange={setPassword}
             />
-            {!activeTab && (
+            {!activeTab ? 
+            (
                 <CMSInput
                   label="Email"
                   type="email"
                   value={email}
                   onChange={setEmail}
                 />
-            )}
+            )
+            :
+            (
+              <>
+                <div className="save-password">
+                  <input 
+                    type="checkbox" 
+                    checked={savePassword} 
+                    onChange={() => setSavePassword(!savePassword)} 
+                  />
+                  <label>Lưu mật khẩu</label>
+                </div>
+              </>
+            )
+          }
         </form>
     );
   }
@@ -110,10 +129,15 @@ const LoginPage = () => {
             />
             
             {loginForm()}
-            <p className={errorMessage ? "error-message" : "loading-message"}>
-                {errorMessage || `${loading ? "Đang xử lý..." : "---"}`} 
-            </p>
+            
+            
             <button className="submit-btn" onClick={handleSubmit}>{activeTab? `Đăng nhập`:`Đăng ký`}</button>
+            <p className={errorMessage ? "error-message" : "loading-message"}>
+                {errorMessage || `${loading ? "Đang xử lý..." : "_________"}`} 
+            </p>
+            <button onClick={() => googleLogin()} className="google-button">
+              Tiếp tục với Google
+            </button>
         </div>
     </div>
   );

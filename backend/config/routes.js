@@ -37,6 +37,7 @@ module.exports.routes = {
   //AUTH
   'POST /api/auth/register':    {action: 'auth/register'},
   'POST /api/auth/login':       {action: 'auth/login'},
+  'POST /api/auth/google':       {action: 'auth/google'},
 
   //PRODUCT
   'GET /api/product/list':      {action: 'product/list'},

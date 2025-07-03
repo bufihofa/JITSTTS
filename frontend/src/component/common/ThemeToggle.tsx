@@ -9,7 +9,6 @@ const ThemeToggle: React.FC = () => {
   const [theme, setTheme] = useState(storage.getTheme());
   
   useEffect(() => {
-    // Set the theme when component mounts
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
   
