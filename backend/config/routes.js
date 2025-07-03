@@ -40,6 +40,7 @@ module.exports.routes = {
   'POST /api/auth/google':       {action: 'auth/google'},
 
   //PRODUCT
+  'GET /api/product/search':    {action: 'product/search'},
   'GET /api/product/list':      {action: 'product/list'},
   'POST /api/product/create':   {action: 'product/create'},
   'PATCH /api/product/update':  {action: 'product/update'},

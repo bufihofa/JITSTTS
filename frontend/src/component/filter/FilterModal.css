@@ -1,0 +1,46 @@
+.filter-modal{
+    position: fixed;
+    top: 160px;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 16px rgba(148, 245, 254, 0.414);
+    border: 1px solid var(--border-primary);
+    padding: 10px 15px;
+    font-size: 13px;
+    gap: 5px;
+}
+.filter-checkbox{
+    width: 11px;
+    height: 11px;
+    padding: 0px;
+    margin: 0px;
+}
+.filter-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+.filter-inputs{
+    display: flex;
+    margin-left: 14px;
+    gap: 5px;
+}
+.filter-input{
+    padding: 2px 5px;
+    border-radius: 5px;
+    border: 1px solid var(--border-primary);
+    width: 90px;
+
+}
+.filter-input:focus{
+    outline: none;
+    border-color: var(--border-focus);
+}
+.filter-label {
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-left: 5px;
+}

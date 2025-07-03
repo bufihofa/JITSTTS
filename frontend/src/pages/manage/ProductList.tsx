@@ -9,12 +9,24 @@ import { GoCopy } from "react-icons/go";
 import SearchBar from "../../component/common/SearchBar";
 import { TbFilterSearch } from "react-icons/tb";
 import Button from "../../component/common/Button";
+import FilterModal from "../../component/filter/FilterModal";
+import type { Filter } from "../../types/Filter";
 
 
 
 
 
 const ProductList: React.FC = () => {
+  const [filters, setFilters] = useState<Filter>
+  ({
+    priceEnabled: false,
+    minPrice: 0,
+    maxPrice: 1000,
+    quantityEnabled: false,
+    minQuantity: 0,
+    maxQuantity: 100
+  });
+
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
@@ -25,7 +37,7 @@ const ProductList: React.FC = () => {
   const [itemPerPage, setItemPerPage] = useState(10);
 
   const [isFormOpen, setFormOpen] = useState(false);
-
+  const [isFilterOpen, setFilterOpen] = useState(false);
   const [editingProduct, setEdittingProduct] = useState<Product>();
   
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -64,9 +76,25 @@ const ProductList: React.FC = () => {
   const goToPage = (page: number) => {
     setCurrentPage(page);
   }
-
-
-
+  // FILTER
+  const onFilterButton = () => {
+    setFilterOpen(!isFilterOpen);
+  }
+  const handleApplyFilters = (newFilters: Filter) => {
+    setFilters(newFilters);
+    // You can also apply the filtering logic here
+  }
+  const updateFilters = (priceEnabled?: boolean, minPrice?: number, maxPrice?: number, quantityEnabled?: boolean, minQuantity?: number, maxQuantity?: number) => {
+    setFilters(prev => ({
+      ...prev,
+      priceEnabled: priceEnabled ?? prev.priceEnabled,
+      minPrice: minPrice ?? prev.minPrice,
+      maxPrice: maxPrice ?? prev.maxPrice,
+      quantityEnabled: quantityEnabled ?? prev.quantityEnabled,
+      minQuantity: minQuantity ?? prev.minQuantity,
+      maxQuantity: maxQuantity ?? prev.maxQuantity
+    }));
+  }
   // SELECT
   const handleSelectProduct = (productId: number) => {
     setSelectedProducts(prev => 
@@ -174,6 +202,7 @@ const ProductList: React.FC = () => {
           />
         )
       }
+      
       <div className="product-list">
         <div className="product-list-header">
           <FaBoxArchive className ="product-list-icon"/> 
@@ -183,12 +212,20 @@ const ProductList: React.FC = () => {
               </div>
 
               <div className="product-list-header-button">
+                
                 <SearchBar
                   value={searchQuery}
                   onUpdateSearch={setSearchQuery}
                 />
-                <button className="header-button filter" onClick={() => onAddButton()}><TbFilterSearch /></button>
-                
+                <button className="header-button filter" onClick={() => onFilterButton()}><TbFilterSearch /></button>
+                {isFilterOpen && 
+                  (
+                  <FilterModal
+                    filters={filters}
+                    updateFilters={updateFilters}
+                  />
+                  )
+                }
                 <Button
                   onAddButton={onAddButton}
                   text="Add Product"
