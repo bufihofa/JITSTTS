@@ -3,6 +3,9 @@ const storage = {
         localStorage.setItem("TOKEN", token);
         localStorage.setItem("ROLE", role);
         localStorage.setItem("USER", username);
+        sessionStorage.setItem("TOKEN", token);
+        sessionStorage.setItem("ROLE", role);
+        sessionStorage.setItem("USER", username);
     },
     setLoginData:(token: string, role: string, username: string) => {
         sessionStorage.setItem("TOKEN", token);

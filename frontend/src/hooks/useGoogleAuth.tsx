@@ -14,8 +14,8 @@ export const useGoogleAuth = () => {
         const response = await axiosInstance.post('/api/auth/google', {
           token: tokenResponse.access_token
         });
-        
-        storage.saveLoginData(
+        storage.clearLoginData(); 
+        storage.setLoginData(
           response.data.token, 
           response.data.user.role, 
           response.data.user.username

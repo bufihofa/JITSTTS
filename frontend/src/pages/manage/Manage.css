@@ -6,13 +6,14 @@
 .product-table th:nth-child(2),
 .product-table td:nth-child(2) { width: 9%; }
 .product-table th:nth-child(3),
-.product-table td:nth-child(3) { width: 32%; }
+.product-table td:nth-child(3) { width: 35%; }
 .product-table th:nth-child(4),
-.product-table td:nth-child(4) { width: 15%; }
+.product-table td:nth-child(4) { width: 12%; }
 .product-table th:nth-child(5),
-.product-table td:nth-child(5) { width: 15%; }
+.product-table td:nth-child(5) { width: 12%; }
 .product-table th:nth-child(6),
-.product-table td:nth-child(6) { width: 15%; }
+.product-table td:nth-child(6) { width: 17%; }
+
 
 .product-list{
     display: flex;

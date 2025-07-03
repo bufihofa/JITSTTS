@@ -45,9 +45,9 @@ module.exports = {
   },
   fn: async function (inputs, exits) {
     const user = this.req.user;
-    const page = Math.max(1, inputs.page);
-    const limit = inputs.limit;
-    const skip = (page - 1) * limit;
+    let page = Math.max(1, inputs.page);
+    let limit = inputs.limit;
+    let skip = (page - 1) * limit;
 
     let criteria = { owner: user.id };
 
@@ -86,6 +86,8 @@ module.exports = {
     ]);
 
     const totalPages = Math.ceil(totalCount / limit);
+    if(page > totalPages) page = totalPages;
+    console.log(page);
     const hasMore = page < totalPages;
     const hasPrevious = page > 1;
 

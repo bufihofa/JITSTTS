@@ -1,6 +1,26 @@
 import type { Product } from "../types/Product";
 import { axiosInstance } from "./axiosInstance";
 
+export const searchProduct = async (params?: {
+  page?: number;
+  limit?: number;
+  searchTerm?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  maxQuantity?: number;
+  minQuantity?: number;
+}) => {
+    try {
+        const response = await axiosInstance.get('/api/product/search', {
+            params
+        });
+        console.log("Search response:", response.data);
+        return response.data;
+    } catch (error: any) {
+        console.error("Error fetching products:", error);
+    return { products: [], pagination: { page: 1, totalPages: 1, totalItems: 0 } };
+  }
+}
 export const getProductList = async () => {
     try {
         const response = await axiosInstance.get('/api/product/list');
