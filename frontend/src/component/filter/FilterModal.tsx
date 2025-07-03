@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import './FilterModal.css';
-import { TbFilterSearch } from "react-icons/tb";
 import type { Filter } from '../../types/Filter';
 
 interface FilterModalProps {

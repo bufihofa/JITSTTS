@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { createProduct, deleteProduct, editProduct, getProductList, searchProduct } from "../../api/product";
+import { createProduct, deleteProduct, editProduct, searchProduct } from "../../api/product";
 import './Manage.css';
 import { FaBoxArchive } from "react-icons/fa6";
 import type { Product } from "../../types/Product";
@@ -19,11 +19,11 @@ import type { Filter } from "../../types/Filter";
 const ProductList: React.FC = () => {
   
 
-  const [products, setProducts] = useState<any[]>([]);
-  const [isLoading, setLoading] = useState<boolean>(true);
+  //const [products, setProducts] = useState<any[]>([]);
+  //const [isLoading, setLoading] = useState<boolean>(true);
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   
-  const isAllSelected = selectedProducts.length === products.length && products.length > 0;
+  //const isAllSelected = selectedProducts.length === products.length && products.length > 0;
   
 
   const [isFormOpen, setFormOpen] = useState(false);
@@ -72,7 +72,6 @@ const ProductList: React.FC = () => {
       param.maxQuantity = filters.maxQuantity;
     }
     
-    setLoading(true);
     try {
       const temp = await searchProduct(param);
       
@@ -81,7 +80,6 @@ const ProductList: React.FC = () => {
     } catch (error) {
       console.error("Failed to fetch products:", error);
     } finally {
-      setLoading(false);
     }
   };
   useEffect(() => {
@@ -274,7 +272,7 @@ const ProductList: React.FC = () => {
             <thead>
               <tr>
                 <th className="select-all-header">
-                  <input type="checkbox" className="select-all" checked={isAllSelected} />
+                  <input type="checkbox" className="select-all" />
                 </th>
                 <th>ID</th><th>Sản phẩm</th><th>Giá</th><th>Số lượng</th><th>Tag</th><th></th>
               </tr>
