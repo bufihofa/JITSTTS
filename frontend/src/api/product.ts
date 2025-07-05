@@ -16,7 +16,6 @@ export const searchProduct = async (params?: {
         const response = await axiosInstance.get('/api/product/search', {
             params
         });
-        console.log("Search response:", response.data);
         return response.data;
     } catch (error: any) {
         console.error("Error fetching products:", error);

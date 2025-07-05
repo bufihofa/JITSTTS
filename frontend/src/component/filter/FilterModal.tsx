@@ -8,18 +8,10 @@ interface FilterModalProps {
 
 const FilterModal: React.FC<FilterModalProps> = ({ filters, updateFilters }) => {
   
-  const logRender = () => {
-    console.log('FilterModal rendered');
-    return (
-        <>
-        </>
-    )
-  };
   return (
     
     <div className="filter-modal">
       <div className="filter-row">
-        {logRender()}
         <label>
           <input 
             className="filter-checkbox"

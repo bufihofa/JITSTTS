@@ -43,6 +43,23 @@ module.exports = {
       product.id = undefined;
     }
     const done = await Product.createEach(inputs.products).fetch();
+    let content = `Đã tạo mới ${done.length} sản phẩm.`;
+    if(done.length === 1) {
+      content = 'Đã tạo mới sản phẩm "' + done[0].name + '".';
+    }
+    if(done.length > 0) {
+      Activity.create({
+        type: 'create',
+        owner: this.req.user.id,
+        content: content,
+        detail: done
+      })
+      .catch(err => {
+        console.log('Lỗi:', err);
+      });
+      console.log(content);
+    }
+
     return exits.success({ message: 'Create Product OK', products: done });
 
   }

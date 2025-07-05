@@ -61,7 +61,6 @@ module.exports = {
         });
     }
     //update
-    console.log('finalProducts', finalProducts);
     if (finalProducts.length > 0) {
         const ids = finalProducts.map(p => p.id).join(',');
         const rawQuery = `
@@ -74,6 +73,21 @@ module.exports = {
             WHERE id IN (${ids}) AND owner = ${user.id}
         `;
         await sails.sendNativeQuery(rawQuery);
+
+        let content = `Đã cập nhật ${finalProducts.length} sản phẩm.`;
+        if(finalProducts.length === 1) {
+          content = `Đã cập nhật sản phẩm "${finalProducts[0].name}".`;
+        }
+        Activity.create({
+          type: 'update',
+          owner: this.req.user.id,
+          content: content,
+          detail: finalProducts
+        })
+        .catch(err => {
+          console.log('Lỗi:', err);
+        });
+        
     }
 
 

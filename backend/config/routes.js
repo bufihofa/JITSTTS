@@ -45,7 +45,8 @@ module.exports.routes = {
   'POST /api/product/create':   {action: 'product/create'},
   'PATCH /api/product/update':  {action: 'product/update'},
   'DELETE /api/product/delete': {action: 'product/delete'},
-
+  
+  'GET /api/product/data':       {action: 'product/data'},
   //USER
   'GET /api/user/list':         {action: 'user/list'},
   'GET /api/user/block/:id':    {action: 'user/block'},

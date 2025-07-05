@@ -105,7 +105,6 @@ const ProductList: React.FC = () => {
     } catch (error) {
       console.error("Failed to fetch products:", error);
     } finally {
-      console.log("OK");
       shouldFetch.current = true;
     }
   };
@@ -127,7 +126,6 @@ const ProductList: React.FC = () => {
       console.log("Fetching is in progress, please wait.");
       return;
     }
-    console.log("shouldFetch2", shouldFetch.current);
     shouldFetch.current = false;
     fetchProducts(page);
       

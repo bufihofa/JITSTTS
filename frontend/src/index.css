@@ -115,8 +115,8 @@
   --border-table-header: #4a4a4a;
   
   /* Shadow colors */
-  --shadow-primary: rgba(0, 0, 0, 0.3);
-  --shadow-secondary: rgba(0, 0, 0, 0.5);
+  --shadow-primary: rgba(52, 52, 52, 0.3);
+  --shadow-secondary: rgba(52, 52, 52, 0.5);
   --shadow-focus: rgba(93, 130, 161, 0.1);
   --shadow-button: rgba(61, 126, 168, 0.4);
   

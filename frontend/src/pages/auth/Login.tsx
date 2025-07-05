@@ -41,7 +41,6 @@ const LoginPage = () => {
     if (activeTab) {
         try {
             const response = await login(username, password, savePassword);
-            console.log(response.status);
             if (response.status === 200) {
                 navigate('/home'); 
             } else {
@@ -54,7 +53,6 @@ const LoginPage = () => {
     else {
         try {
             const response = await register(username, email, password);
-            console.log(response.status);
             if (response.status === 200) {
                 navigate('/home'); 
             } else {

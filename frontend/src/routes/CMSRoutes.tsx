@@ -1,16 +1,17 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import CMSLayout from "../component/CMSLayout";
 import ProductList from "../pages/manage/ProductList";
+import DashBoard from "../pages/home/DashBoard";
 
 const CMSRoutes: React.FC = () => {
   return (
     <CMSLayout>
         <Routes>
-            <Route path="home" element={<div>Home</div>} />
+            <Route path="home" element={<DashBoard/>} />
 
-            <Route path="products" element={<ProductList   />} />
+            <Route path="products" element={<ProductList/>} />
             <Route path="users" element={<div>User</div>} />
-
+            <Route path="about" element={<div>About</div>} />
             <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
     </CMSLayout>

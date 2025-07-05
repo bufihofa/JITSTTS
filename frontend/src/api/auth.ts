@@ -8,7 +8,6 @@ export const login = async (username: string, password: string, savePassword: bo
             { username, password }
         );
 
-        console.log("Login response:", response.data);
 
         storage.clearLoginData(); 
         
@@ -34,7 +33,6 @@ export const login = async (username: string, password: string, savePassword: bo
         if(message.length > 100) {
             message = "Thông tin đăng nhập không hợp lệ";
         }
-        console.log(message);
         return message;
         
     }
@@ -47,7 +45,6 @@ export const register = async (username: string, email: string, password: string
         const response = await axiosInstance.post('/api/auth/register', 
             { username, email, password }
         );
-        console.log("Register response:", response.data);
         storage.setLoginData(response.data.token, response.data.user.role, response.data.user.username);
 
         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
@@ -55,7 +52,6 @@ export const register = async (username: string, email: string, password: string
         return response;
     } catch (error: any) {
         let message = error.response?.data?.message || "Đăng ký thất bại";
-        console.log(message);
         if(message.length > 100) {
             message = "Thông tin đăng ký không hợp lệ";
         }
@@ -72,7 +68,6 @@ export const logout = async () => {
         axiosInstance.defaults.headers.common['Authorization'] = '';
     } catch (error: any) {
         const message = error.response?.data?.message || "Đăng xuất thất bại";
-        console.log(message);
         return message;
     }
 }
