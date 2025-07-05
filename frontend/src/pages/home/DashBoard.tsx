@@ -3,6 +3,7 @@ import { axiosInstance } from '../../api/axiosInstance';
 import './DashBoard.css';
 import { FaExclamationTriangle, FaHistory } from 'react-icons/fa';
 import { MdEdit, MdDelete, MdAdd } from "react-icons/md";
+import type { Product } from '../../types/Product';
 
 
 interface LowStockProduct {
@@ -15,7 +16,8 @@ interface Activity {
   type: string;
   content: string;
   createdAt: string;
-  detail: any;
+  detail?: Product[];
+  oldDetail?: Product[];
 }
 
 const DashBoard = () => {
@@ -48,16 +50,33 @@ const DashBoard = () => {
     return <div className="dashboard-loading">Đang tải dữ liệu...</div>;
   }
 
-  const formatDate = (dateString: string) => {
+const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('vi-VN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
-  };
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffMinutes < 1) {
+        return "mới đây";
+    } else if (diffMinutes < 60) {
+        return `${diffMinutes} phút trước`;
+    } else if (diffHours < 24) {
+        return `${diffHours} giờ trước`;
+    } else if (diffDays < 7) {
+        return `${diffDays} ngày trước`;
+    } else {
+        return new Intl.DateTimeFormat('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).format(date);
+    }
+};
 
   const getActivityIcon = (type: string) => {
     switch (type.toLowerCase()) {

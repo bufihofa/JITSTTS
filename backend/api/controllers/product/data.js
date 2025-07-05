@@ -38,7 +38,7 @@ module.exports = {
       value: tagCounts[tag]
     }));
     distribution.sort((a, b) => b.value - a.value); 
-
+    lowStockProducts.sort((a, b) => a.quantity - b.quantity);
 
 
     return exits.success({ message: 'Product data retrieved successfully.', distribution, lowStockProducts, activities });

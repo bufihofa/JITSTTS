@@ -82,7 +82,8 @@ module.exports = {
           type: 'update',
           owner: this.req.user.id,
           content: content,
-          detail: finalProducts
+          detail: finalProducts,
+          oldDetail: existingProducts
         })
         .catch(err => {
           console.log('Lỗi:', err);
