@@ -33,7 +33,7 @@
     border-radius: 5px;
     border: 1px solid var(--border-primary);
     width: 90px;
-
+    
 }
 .filter-input:focus{
     outline: none;

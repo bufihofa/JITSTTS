@@ -20,7 +20,6 @@ module.exports = {
   fn: async function(inputs, exits) {
     const user = this.req.user;
     const products = inputs.products;
-
     const updateProducts = [];
     const failedProducts = [];
 
@@ -33,21 +32,19 @@ module.exports = {
             owner: user.id, 
         };
 
-        if (product.name) newProduct.name = product.name;
-        if (product.price) newProduct.price = product.price;
-        if (product.tag) newProduct.tag = product.tag;
-        if (product.quantity) newProduct.quantity = product.quantity;
+        if (product.name !== undefined) newProduct.name = product.name;
+          if (product.price !== undefined) newProduct.price = product.price;
+          if (product.tag !== undefined) newProduct.tag = product.tag;
+          if (product.quantity !== undefined) newProduct.quantity = product.quantity;
         
         updateProducts.push(newProduct);
       }
     }
-
     //get all products by ids
     const existingProducts = await Product.find({ 
       id: updateProducts.map(p => p.id), 
       owner: user.id 
     });
-
     const finalProducts = [];
 
     //update existingProducts to updateProducts
@@ -64,6 +61,7 @@ module.exports = {
         });
     }
     //update
+    console.log('finalProducts', finalProducts);
     if (finalProducts.length > 0) {
         const ids = finalProducts.map(p => p.id).join(',');
         const rawQuery = `

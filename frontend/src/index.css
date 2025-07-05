@@ -1,5 +1,5 @@
 :root {
-  font-family: sans-serif, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif, system-ui, Avenir, Helvetica, Arial;
   line-height: 1.5;
   font-weight: 400;
 
@@ -17,7 +17,7 @@
   --text-hover: #7EB8E3;
   --text-error: #ff3b30;
   --text-success: #4a90a4;
-  --text-table: rgb(51, 62, 67);
+  --text-table: rgb(59, 74, 81);
   --text-logo: #6b7280;
   
   /* Background colors */

@@ -1,4 +1,3 @@
-
 module.exports = {
   friendlyName: 'Search Product',
   
@@ -35,6 +34,18 @@ module.exports = {
     maxQuantity: {
       description: 'Maximum quantity for filtering',
       type: 'number'
+    },
+    sortBy: {
+      description: 'Field to sort by (name, price, quantity, tag)',
+      type: 'string',
+      isIn: ['name', 'price', 'quantity', 'tag'],
+      defaultsTo: 'name'
+    },
+    sortDirection: {
+      description: 'Sort direction (asc or desc)',
+      type: 'string',
+      isIn: ['asc', 'desc'],
+      defaultsTo: 'asc'
     }
   },
 
@@ -44,6 +55,7 @@ module.exports = {
     },
   },
   fn: async function (inputs, exits) {
+    console.log('Search Product inputs:', inputs);
     const user = this.req.user;
     let page = Math.max(1, inputs.page);
     let limit = inputs.limit;
@@ -77,17 +89,30 @@ module.exports = {
         criteria.quantity['<='] = inputs.maxQuantity;
       }
     }
-
-    const [totalCount, products] = await Promise.all([
+    let [totalCount, products] = await Promise.all([
         Product.count(criteria),
         Product.find(criteria)
             .skip(skip)
             .limit(limit)
+            .sort([
+              { [inputs.sortBy]: inputs.sortDirection },
+              { id: 'ASC' }
+            ])
     ]);
-
     const totalPages = Math.ceil(totalCount / limit);
-    if(page > totalPages) page = totalPages;
-    console.log(page);
+    if(page > totalPages){
+      page = totalPages;
+      if(page > 0){
+        skip = (page - 1) * limit;
+        products = await Product.find(criteria)
+          .skip(skip)
+          .limit(limit)
+          .sort([
+            { [inputs.sortBy]: inputs.sortDirection },
+            { id: 'ASC' }
+          ]);
+      }
+    }
     const hasMore = page < totalPages;
     const hasPrevious = page > 1;
 

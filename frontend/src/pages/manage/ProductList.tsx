@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createProduct, deleteProduct, editProduct, searchProduct } from "../../api/product";
 import './Manage.css';
 import { FaBoxArchive } from "react-icons/fa6";
@@ -11,7 +11,9 @@ import { TbFilterSearch } from "react-icons/tb";
 import Button from "../../component/common/Button";
 import FilterModal from "../../component/filter/FilterModal";
 import type { Filter } from "../../types/Filter";
+import Pagination from "../../component/pagination/Pagination";
 
+import { LuArrowUpDown, LuArrowDown10, LuArrowUp01, LuArrowDownZA, LuArrowUpAZ } from "react-icons/lu";
 
 
 
@@ -29,11 +31,12 @@ const ProductList: React.FC = () => {
   const [isFormOpen, setFormOpen] = useState(false);
   const [isFilterOpen, setFilterOpen] = useState(false);
   const [editingProduct, setEdittingProduct] = useState<Product>();
-  
+  const [sortBy, setSortBy] = useState<string>('name');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const [shouldFetch, setShouldFetch] = useState(false);
-
+  const shouldFetch = useRef(true);
+  
   const [finalProducts, setFinalProducts] = useState<Product[]>([]);  
   
   const [pagination, setPagination] = useState({
@@ -51,7 +54,7 @@ const ProductList: React.FC = () => {
   ({
     priceEnabled: false,
     minPrice: 0,
-    maxPrice: 1000,
+    maxPrice: 20000,
     quantityEnabled: false,
     minQuantity: 0,
     maxQuantity: 100
@@ -59,10 +62,14 @@ const ProductList: React.FC = () => {
 
   // Đổi params mỗi khi có thay đổi về filters or searchQuery
   const fetchProducts = async (page: number) => {
+    
     const param: any = {};
     param.page = page;
     param.limit = pagination.limit || 10;
     param.searchTerm = searchQuery || '';
+    param.sortBy = sortBy;
+    param.sortDirection = sortDirection;
+
     if (filters.priceEnabled) {
       param.minPrice = filters.minPrice;
       param.maxPrice = filters.maxPrice;
@@ -77,30 +84,31 @@ const ProductList: React.FC = () => {
       
       setFinalProducts(temp.products);
       setPagination(temp.pagination);
+      
     } catch (error) {
       console.error("Failed to fetch products:", error);
     } finally {
+      console.log("OK");
+      shouldFetch.current = true;
     }
   };
   useEffect(() => {
+    shouldFetch.current = false;
     fetchProducts(1);
     
-  }, [filters, searchQuery]);
+  }, [filters, searchQuery, sortBy, sortDirection, pagination.limit]);
   
  
-  useEffect(() => {
-    if (shouldFetch) {
-      fetchProducts(pagination.page);
-      setShouldFetch(false);
-    }
-  }, [pagination.page]);
+  
   
   const gotoPage = (page: number) =>{
-    setShouldFetch(true);
-    setPagination({
-      ...pagination,
-      page: page,
-    });
+    if(!shouldFetch.current) {
+      console.log("Fetching is in progress, please wait.");
+      return;
+    }
+    console.log("shouldFetch2", shouldFetch.current);
+    shouldFetch.current = false;
+    fetchProducts(page);
       
   }
   
@@ -136,19 +144,16 @@ const ProductList: React.FC = () => {
         ? prev.filter(id => id !== productId) : [...prev, productId]
   )};
 
-  /*
-  const handleSelectAll = () => {
-    setSelectedProducts(prev => 
-      prev.length === filteredProducts.length 
-        ? [] : filteredProducts.map(product => product.id)
-  )};
-  */
+  
+  
+  
 
 
   // DEL
   const handleDeleteProduct = async (id: number[]) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       await deleteProduct(id);
+      setSelectedProducts([]);
       fetchProducts(pagination.page);
     }
   }
@@ -194,36 +199,36 @@ const ProductList: React.FC = () => {
     setFormOpen(false);
   }
   
-  
-
-  const paginationControls = useMemo(() => {
-    console.log("render pagination controls ",pagination);
-    let startPage = Math.max(1, pagination.page - 2);
-    let endPage = Math.min(pagination.totalPages, pagination.page + 2);
-    if (endPage - startPage + 1 < 5) {
-      if (startPage === 1) {
-        endPage = Math.min(5, pagination.totalPages);
-      } else if (endPage === pagination.totalPages) {
-        startPage = Math.max(1, pagination.totalPages - 4);
+  const handleSort = (by: string) => {
+    if (sortBy === by) {
+      if(sortDirection == 'asc'){
+        setSortDirection('desc');
       }
+      else {
+        setSortDirection('asc');
+      }
+    } else {
+      setSortBy(by);
+      setSortDirection('asc');
     }
-    
-    const pages = [];
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
+  }
+  const sortTH = (by: string, label: string) => {
+    if(by === 'name' || by === 'tag' ) {
+      return <th onClick={()=>{handleSort(by)}}>{label} {sortBy==by ? (sortDirection=="asc" ? <LuArrowUpAZ className="arrow"/> : <LuArrowDownZA className="arrow"/>) : <LuArrowUpDown className="arrow-unsort"/>}</th>
     }
-    return pages.map(page => (
-      <button 
-        key={page}
-        className={`page-button ${pagination.page === page ? 'active-page' : ''}`}
-        disabled={pagination.page === page}
-        onClick={() => gotoPage(page)}
-      >
-        {page}
-      </button>
-    ));
+    else {
+      return <th onClick={()=>{handleSort(by)}}>{label} {sortBy==by ? (sortDirection=="asc" ? <LuArrowUp01 className="arrow"/> : <LuArrowDown10 className="arrow"/>) : <LuArrowUpDown className="arrow-unsort"/>}</th>
+    }
+  }
+  const paginationControls = useMemo(() => {
+    return(
+      <Pagination
+        pagination={pagination}
+        gotoPage={gotoPage}
+      />  
+    )
   }, [pagination, finalProducts]);
-
+  
   return (
     <>
       {isFormOpen &&
@@ -242,6 +247,9 @@ const ProductList: React.FC = () => {
           <div className="product-list-title">Storage</div> 
             <div className="product-list-header-actions">
               <div className="temp">
+                {selectedProducts.length > 0 && (
+                  <button className="button-delete-row" onClick={() => handleDeleteProduct(selectedProducts)}><MdDelete/></button>
+                )}
               </div>
 
               <div className="product-list-header-button">
@@ -272,9 +280,13 @@ const ProductList: React.FC = () => {
             <thead>
               <tr>
                 <th className="select-all-header">
-                  <input type="checkbox" className="select-all" />
                 </th>
-                <th>ID</th><th>Sản phẩm</th><th>Giá</th><th>Số lượng</th><th>Tag</th><th></th>
+                <th>ID</th>
+                {sortTH("name", "Sản phẩm")}
+                {sortTH("price", "Giá")}
+                {sortTH("quantity", "SL")}
+                {sortTH("tag", "Tag")}
+                <th></th>
               </tr>
             </thead>
 
@@ -286,8 +298,8 @@ const ProductList: React.FC = () => {
                   </td>
                   <td>{product.id}</td>
                   <td>{product.name}</td>
-                  <td>${product.price}</td>
-                  <td>{product.quantity || 0}</td>
+                  <td>{product.price?.toLocaleString('vi-VN')}₫</td>
+                  <td>{product.quantity?.toLocaleString('vi-VN') || 0}</td>
                   <td>{product.tag || 'N/A'}</td>
                   <td>
                     <div className="product-list-actions">
@@ -312,7 +324,33 @@ const ProductList: React.FC = () => {
         </div>
         <div className="product-list-footer">
           <div className="footer-text">
-            {paginationControls}
+            <div className="footer-text-info">
+              Showing {Math.max(0,((pagination.page-1)*pagination.limit + 1))} - {Math.min(pagination.totalItems, pagination.page*pagination.limit)} of {pagination.totalItems} entries
+            </div>
+            <div className="footer-text-pagination">
+             {paginationControls}
+            </div>
+            <div className="footer-text-select-limit">
+              <span className="footer-text-select-label">Items per page: </span>
+              <select 
+                className="footer-text-select"
+                value={pagination.limit}
+                onChange={(e) => {
+                  setPagination(prev => ({
+                    ...prev,
+                    limit: Number(e.target.value),
+                    page: 1
+                  }));
+                }}
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={15}>15</option>
+                <option value={20}>20</option>
+                <option value={30}>30</option>
+                <option value={50}>50</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>

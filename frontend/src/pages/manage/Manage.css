@@ -4,13 +4,21 @@
     padding-left: 15px;
 }
 .product-table th:nth-child(2),
-.product-table td:nth-child(2) { width: 9%; }
+.product-table td:nth-child(2) { width: 7%; }
 .product-table th:nth-child(3),
-.product-table td:nth-child(3) { width: 35%; }
+.product-table td:nth-child(3) { width: 32%; }
 .product-table th:nth-child(4),
-.product-table td:nth-child(4) { width: 12%; }
+.product-table td:nth-child(4) { 
+    width: 14%; 
+    text-align: right;
+    padding-right: 4%;
+}
 .product-table th:nth-child(5),
-.product-table td:nth-child(5) { width: 12%; }
+.product-table td:nth-child(5) { 
+    width: 12%; 
+    text-align: right;
+    padding-right: 6%;
+ }
 .product-table th:nth-child(6),
 .product-table td:nth-child(6) { width: 17%; }
 
@@ -72,7 +80,9 @@
     border-bottom: 1px solid var(--border-table);
     color: var(--text-table);
     font-size: 14px;
+    font-weight: 450;
     vertical-align: middle; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 tr{
@@ -145,10 +155,7 @@ tr{
 
 .product-list-footer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 10px;
-    border-top: 1px solid var(--border-primary);
+    padding-top: 15px;
 }
 
 .button-delete-row {
@@ -262,4 +269,48 @@ tr{
 .filter {
     margin-right: 20px;
     padding: 4px 4px;
+}
+
+.arrow {
+    font-size: 15px;
+    align-self: center;
+    color: var(--text-secondary);
+}
+.arrow-unsort {
+    font-size: 15px;
+    align-self: center;
+    color: var(--text-secondary);
+}
+.footer-text {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.footer-text-info {
+    flex: 1; 
+    font-size: 13px;
+    background-color: var(--layout-color);
+    color: var(--text-primary);
+}
+
+
+
+.footer-text-select-limit {
+    flex: 1; 
+    display: flex;
+    justify-content: end;
+    font-size: 13px;
+    background-color: var(--layout-color);
+    color: var(--text-primary);
+}
+.footer-text-select{
+    background-color: var(--layout-color);
+    color: var(--text-primary);
+    margin-left: 2px;
+}
+.price-row {
+    text-align: right;
+    padding-right: 10px;
 }

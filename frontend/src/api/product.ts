@@ -9,6 +9,8 @@ export const searchProduct = async (params?: {
   maxPrice?: number;
   maxQuantity?: number;
   minQuantity?: number;
+  sortBy?: string;
+  sortDirection?: string;
 }) => {
     try {
         const response = await axiosInstance.get('/api/product/search', {
