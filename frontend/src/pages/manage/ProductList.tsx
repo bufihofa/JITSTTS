@@ -62,7 +62,10 @@ const ProductList: React.FC = () => {
 
   // Đổi params mỗi khi có thay đổi về filters or searchQuery
   const fetchProducts = async (page: number) => {
-    
+    setPagination(prev => ({
+      ...prev,
+      page: page,
+    }));
     const param: any = {};
     param.page = page;
     param.limit = pagination.limit || 10;
@@ -83,7 +86,21 @@ const ProductList: React.FC = () => {
       const temp = await searchProduct(param);
       
       setFinalProducts(temp.products);
-      setPagination(temp.pagination);
+      if(temp.pagination.totalPages < pagination.page) {
+          setPagination(prev => ({
+          ...prev,
+          page: temp.pagination.page,
+          totalItems: temp.pagination.totalItems,
+          totalPages: temp.pagination.totalPages,
+        }));
+      }
+      else{
+        setPagination(prev => ({
+          ...prev,
+          totalItems: temp.pagination.totalItems,
+          totalPages: temp.pagination.totalPages,
+        }));
+      }
       
     } catch (error) {
       console.error("Failed to fetch products:", error);
@@ -94,6 +111,10 @@ const ProductList: React.FC = () => {
   };
   useEffect(() => {
     shouldFetch.current = false;
+    setPagination(prev => ({
+        ...prev,
+        page: 1,
+    }));
     fetchProducts(1);
     
   }, [filters, searchQuery, sortBy, sortDirection, pagination.limit]);

@@ -21,7 +21,7 @@ const Pagination: React.FC<PaginationProps> = ({ pagination, gotoPage }) => {
     }
     return (
         <>
-            <button className="page-button" onClick={() => gotoPage(pagination.page - 1)} disabled={!pagination.hasPrevious}>❮</button>
+            <button className="page-button" onClick={() => gotoPage(pagination.page - 1)} disabled={(pagination.page<2)}>❮</button>
             {pages.map(page => (
                 <button 
                     key={page}
@@ -32,7 +32,7 @@ const Pagination: React.FC<PaginationProps> = ({ pagination, gotoPage }) => {
                     {page}
                 </button>
             ))}
-            <button className="page-button" onClick={() => gotoPage(pagination.page + 1)} disabled={!pagination.hasMore}>❯</button>
+            <button className="page-button" onClick={() => gotoPage(pagination.page + 1)} disabled={(pagination.page>=pagination.totalPages)}>❯</button>
         </>
     )
 }

@@ -236,9 +236,7 @@ tr{
     color: var(--text-primary);
 }
 
-.page-button:hover {
-    transform: translateY(-3px);
-}
+
 
 .page-button:disabled {
     color: var(--text-tertiary);
