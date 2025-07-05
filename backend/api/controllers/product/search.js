@@ -55,7 +55,6 @@ module.exports = {
     },
   },
   fn: async function (inputs, exits) {
-    console.log('Search Product inputs:', inputs);
     const user = this.req.user;
     let page = Math.max(1, inputs.page);
     let limit = inputs.limit;
