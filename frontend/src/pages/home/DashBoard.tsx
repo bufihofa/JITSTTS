@@ -4,6 +4,7 @@ import './DashBoard.css';
 import { FaExclamationTriangle, FaHistory } from 'react-icons/fa';
 import { MdEdit, MdDelete, MdAdd } from "react-icons/md";
 import type { Product } from '../../types/Product';
+import Tooltip from './Tooltip';
 
 
 interface LowStockProduct {
@@ -24,6 +25,7 @@ const DashBoard = () => {
   const [lowStockProducts, setLowStockProducts] = useState<LowStockProduct[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hoveredActivity, setHoveredActivity] = useState<Activity | null>(null);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -46,9 +48,7 @@ const DashBoard = () => {
   }, []);
 
   
-  if (loading) {
-    return <div className="dashboard-loading">Đang tải dữ liệu...</div>;
-  }
+  
 
 const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -96,24 +96,14 @@ const formatDate = (dateString: string) => {
         <div className="dashboard-card low-stock-container">
           <div className="card-header">
             <FaExclamationTriangle className="card-icon warning" />
-            <p className="card-title">Sản phẩm sắp hết hàng</p>
+            <p className="card-title">Low in stock</p>
           </div>
           <div className="card-content">
-            {lowStockProducts.length === 0 ? (
-              <div className="empty-message">Không có sản phẩm nào sắp hết hàng</div>
-            ) : (
+            {(
               <table className="low-stock-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Sản phẩm</th>
-                    <th>Số lượng</th>
-                  </tr>
-                </thead>
                 <tbody>
                   {lowStockProducts.map((product, index) => (
-                    <tr key={index} className={product.quantity <= 5 ? "critical-stock" : ""}>
-                      <td>{product.id}</td>
+                    <tr key={index} className={product.quantity <= 0 ? "row critical-stock" : "row"}>
                       <td>{product.name}</td>
                       <td className="quantity-cell">{product.quantity}</td>
                     </tr>
@@ -127,15 +117,18 @@ const formatDate = (dateString: string) => {
         <div className="dashboard-card activity-container">
           <div className="card-header">
             <FaHistory className="card-icon" />
-            <p className="card-title">Hoạt động gần đây</p>
+            <p className="card-title">Recent activity</p>
           </div>
           <div className="card-content">
-            {activities.length === 0 ? (
-              <div className="empty-message">Không có hoạt động nào gần đây</div>
-            ) : (
+            {(
               <div className="activity-list">
                 {activities.slice(0, 20).map((activity, index) => (
-                  <div key={index} className="activity-item">
+                  <div 
+                    key={index} 
+                    className="activity-item"
+                    onMouseEnter={() => setHoveredActivity(activity)}
+                    onMouseLeave={() => setHoveredActivity(null)}
+                  >
                     <div className="activity-icon-container">
                       {getActivityIcon(activity.type)}
                     </div>
@@ -143,6 +136,13 @@ const formatDate = (dateString: string) => {
                       <div className="activity-content">{activity.content}</div>
                       <div className="activity-time">{formatDate(activity.createdAt)}</div>
                     </div>
+                    
+                    {hoveredActivity === activity && (activity.detail?.length || activity.oldDetail?.length) && (
+                      <>
+                       
+                      </>
+                      //<Tooltip activity={activity} />
+                    )}
                   </div>
                 ))}
               </div>

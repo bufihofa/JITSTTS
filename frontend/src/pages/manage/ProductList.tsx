@@ -300,7 +300,6 @@ const ProductList: React.FC = () => {
               <tr>
                 <th className="select-all-header">
                 </th>
-                <th>ID</th>
                 {sortTH("name", "Sản phẩm")}
                 {sortTH("price", "Giá")}
                 {sortTH("quantity", "SL")}
@@ -315,7 +314,6 @@ const ProductList: React.FC = () => {
                   <td>
                     <input type="checkbox" className="select" checked={selectedProducts.includes(product.id)} onChange={() => handleSelectProduct?.(product.id)} />
                   </td>
-                  <td>{product.id}</td>
                   <td>{product.name}</td>
                   <td>{product.price?.toLocaleString('vi-VN')}₫</td>
                   <td>{product.quantity?.toLocaleString('vi-VN') || 0}</td>

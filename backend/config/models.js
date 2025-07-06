@@ -12,7 +12,19 @@
  * them on a project-wide or per-model basis, see:
  * https://sailsjs.com/docs/concepts/models-and-orm/model-settings
  */
+require('dotenv').config();
 
+const modelsConfigs = {
+  mysql: {
+    id: { type: 'number', autoIncrement: true}
+  },
+  mongodb: {
+    id: { type: 'string', columnName: '_id' }
+  }
+};
+const dbType = (process.env.DB_TYPE || 'mysql').toLowerCase();
+console.log("hello");
+console.log(modelsConfigs[dbType].id);
 module.exports.models = {
 
 
@@ -69,7 +81,7 @@ module.exports.models = {
   ***************************************************************************/
 
   attributes: {
-    id: { type: 'number', autoIncrement: true, },
+    id: modelsConfigs[dbType].id,
     //--------------------------------------------------------------------------
     //  /\   Using MongoDB?
     //  ||   Replace `id` above with this instead:

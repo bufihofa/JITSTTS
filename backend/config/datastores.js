@@ -14,18 +14,23 @@
  */
 require('dotenv').config();
 
-module.exports.datastores = {
-  default: {
+const datastoreConfigs = {
+  mysql: {
     adapter: 'sails-mysql',
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    port: process.env.DB_PORT,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    ssl: {
-      rejectUnauthorized: false
-    },
+    url: process.env.MYSQL_URI,
   },
+  mongodb: {
+    adapter: 'sails-mongo',
+    url: process.env.MONGODB_URI,
+  }
+};
+
+// Use DB_TYPE environment variable to determine which database to use
+// Default to MySQL if not specified
+const dbType = (process.env.DB_TYPE || 'mysql').toLowerCase();
+
+module.exports.datastores = {
+  default: datastoreConfigs[dbType] || datastoreConfigs.mysql,
 };
 
 

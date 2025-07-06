@@ -62,23 +62,20 @@ module.exports = {
     }
     //update
     if (finalProducts.length > 0) {
-        const ids = finalProducts.map(p => p.id).join(',');
-        const rawQuery = `
-            UPDATE product 
-            SET 
-            name = CASE ${finalProducts.map(p => `WHEN id = ${p.id} THEN '${p.name}'`).join(' ')} END,
-            price = CASE ${finalProducts.map(p => `WHEN id = ${p.id} THEN ${p.price}`).join(' ')} END,
-            tag = CASE ${finalProducts.map(p => `WHEN id = ${p.id} THEN '${p.tag}'`).join(' ')} END,
-            quantity = CASE ${finalProducts.map(p => `WHEN id = ${p.id} THEN ${p.quantity}`).join(' ')} END
-            WHERE id IN (${ids}) AND owner = ${user.id}
-        `;
-        await sails.sendNativeQuery(rawQuery);
+        await Promise.all(finalProducts.map(product => 
+          Product.updateOne({ id: product.id }).set({
+            name: product.name,
+            price: product.price,
+            tag: product.tag,
+            quantity: product.quantity
+          })
+        ));
 
         let content = `Đã cập nhật ${finalProducts.length} sản phẩm.`;
         if(finalProducts.length === 1) {
           content = `Đã cập nhật sản phẩm "${finalProducts[0].name}".`;
         }
-        Activity.create({
+        Activity.create({ 
           type: 'update',
           owner: this.req.user.id,
           content: content,
