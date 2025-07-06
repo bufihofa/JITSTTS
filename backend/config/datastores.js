@@ -23,7 +23,7 @@ const datastoreConfigs = {
     adapter: 'sails-mongo',
     url: process.env.MONGODB_URI,
     ssl: true,
-    sslValidate: false,
+    tls: true,
   }
 };
 
