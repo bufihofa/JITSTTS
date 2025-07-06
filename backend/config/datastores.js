@@ -18,12 +18,12 @@ const datastoreConfigs = {
   mysql: {
     adapter: 'sails-mysql',
     url: process.env.MYSQL_URI,
-    ssl: true,
   },
   mongodb: {
     adapter: 'sails-mongo',
     url: process.env.MONGODB_URI,
     ssl: true,
+    sslValidate: false,
   }
 };
 
