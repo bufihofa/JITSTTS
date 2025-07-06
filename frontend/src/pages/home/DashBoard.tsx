@@ -4,7 +4,6 @@ import './DashBoard.css';
 import { FaExclamationTriangle, FaHistory } from 'react-icons/fa';
 import { MdEdit, MdDelete, MdAdd } from "react-icons/md";
 import type { Product } from '../../types/Product';
-import Tooltip from './Tooltip';
 
 
 interface LowStockProduct {
@@ -24,7 +23,6 @@ interface Activity {
 const DashBoard = () => {
   const [lowStockProducts, setLowStockProducts] = useState<LowStockProduct[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [loading, setLoading] = useState(true);
   const [hoveredActivity, setHoveredActivity] = useState<Activity | null>(null);
 
   useEffect(() => {
@@ -39,7 +37,6 @@ const DashBoard = () => {
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
       } finally {
-        setLoading(false);
         
       }
     };
