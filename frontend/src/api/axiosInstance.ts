@@ -26,6 +26,8 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
     (response) => {
+        storage.setLastAccess();
+        window.dispatchEvent(new Event('storageAccessUpdated'));
         return response;
     },
     (error) => {

@@ -112,7 +112,7 @@ const ProductForm: React.FC<AddProductFormProps> = ({onSave, onCloseForm, editin
                       value={tag}
                       onChange={setTag}
                     />
-                    <button type="submit">Xác nhận</button>
+                    <button className="submit-btn" type="submit">Xác nhận</button>
                 </form>
             </div>
         </div>
