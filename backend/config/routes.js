@@ -49,8 +49,6 @@ module.exports.routes = {
   'GET /api/product/data':       {action: 'product/data'},
   //USER
   'GET /api/user/list':         {action: 'user/list'},
-  'GET /api/user/block/:id':    {action: 'user/block'},
-  'GET /api/user/unblock/:id':  {action: 'user/unblock'},
 
   'GET /*': { 
     skipAssets: true,
