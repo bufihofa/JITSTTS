@@ -1,24 +1,22 @@
 # JITSTTS - Hệ thống Quản lý kho hàng
 
 - [JITSTTS - Hệ thống Quản lý Tồn kho](#jitstts---hệ-thống-quản-lý-tồn-kho)
-  - [Cấu trúc thư mục](#cấu-trúc-thư-mục)
   - [Backend (Sails.js)](#backend-sailsjs)
     - [Cài đặt môi trường](#cài-đặt-môi-trường)
     - [Thiết lập `.env`](#thiết-lập-env)
     - [Chạy ứng dụng](#chạy-ứng-dụng)
     - [Models](#models)
-    - [Tài liệu API](#tài-liệu-api)
+    - [API](#tài-liệu-api)
       - [1. Xác thực](#1-xác-thực)
       - [2. Sản phẩm](#2-sản-phẩm)
   - [Frontend (React + Vite)](#frontend-react--vite)
     - [Cài đặt môi trường](#cài-đặt-môi-trường-1)
     - [Run](#chạy-ứng-dụng-1)
     - [Build](#build-ứng-dụng)
-    
-# Cấu trúc thư mục
-
--   `/backend`: Chứa mã nguồn cho máy chủ Sails.js.
--   `/frontend`: Chứa mã nguồn cho ứng dụng client React.
+---
+# DEMO APP
+- [Sails + react + mysql](https://jitscms.up.railway.app/)
+- [Sails + react + mongodb](https://jitscms.onrender.com/)
 
 ---
 
@@ -159,7 +157,7 @@ Tất cả các API đều yêu cầu `Authorization: Bearer <token>` trong head
 ### 2. Sản phẩm
 
 *   **`GET /api/product/list`**: Lấy danh sách tất cả sản phẩm.
-    *   **Controller**: `backend/api/controllers/product/list.js`
+    *   **Controller**: [`backend/api/controllers/product/list.js`](backend/api/controllers/product/list.js)
     *   **Header**: `Authorization: Bearer <token>`
     *   **Response (Success)**:
         ```json
@@ -177,9 +175,14 @@ Tất cả các API đều yêu cầu `Authorization: Bearer <token>` trong head
         }
         ```
 *   **`GET /api/product/search`**: Tìm kiếm và phân trang sản phẩm.
-    *   **Controller**: `backend/api/controllers/product/search.js`
+    *   **Controller**: [`backend/api/controllers/product/search.js`](backend/api/controllers/product/search.js)
+    
     *   **Header**: `Authorization: Bearer <token>`
     *   **Query Params**: `page`, `limit`, `searchTerm`, `sortBy`, `sortDirection`, `minPrice`, `maxPrice`, `minQuantity`, `maxQuantity`.
+    * *Example*
+    ```  
+    /api/product/search?page=1&limit=10&searchTerm=Socola&sortBy=name&sortDirection=asc&minPrice=0&maxPrice=20000&minQuantity=0&maxQuantity=100
+    ```
     *   **Response (Success)**:
         ```json
         {
