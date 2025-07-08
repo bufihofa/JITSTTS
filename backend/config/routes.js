@@ -37,7 +37,7 @@ module.exports.routes = {
   //AUTH
   'POST /api/auth/register':    {action: 'auth/register'},
   'POST /api/auth/login':       {action: 'auth/login'},
-  'POST /api/auth/google':       {action: 'auth/google'},
+  'POST /api/auth/google':      {action: 'auth/google'},
 
   //PRODUCT
   'GET /api/product/search':    {action: 'product/search'},
@@ -46,9 +46,19 @@ module.exports.routes = {
   'PATCH /api/product/update':  {action: 'product/update'},
   'DELETE /api/product/delete': {action: 'product/delete'},
   
-  'GET /api/product/data':       {action: 'product/data'},
+  'GET /api/product/data':      {action: 'product/data'},
   //USER
   'GET /api/user/list':         {action: 'user/list'},
+
+  //ROLE
+  'GET /api/role/list':         {action: 'role/list'},
+  'POST /api/role/create':      {action: 'role/create'},
+  'PATCH /api/role/update':     {action: 'role/update'},
+  'PATCH /api/role/setrole':    {action: 'role/setrole'},
+  
+  //PERM
+  'GET /api/perm/list':         {action: 'perm/list'},
+  'POST /api/perm/create':      {action: 'perm/create'},
 
   'GET /*': { 
     skipAssets: true,

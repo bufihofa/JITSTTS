@@ -5,11 +5,13 @@ module.exports = {
     username: { type: 'string', required: true, unique: true },
     email: { type: 'string', required: true, unique: true, isEmail: true },
     password: { type: 'string', required: true },
-    isBlocked: { type: 'boolean', defaultsTo: false },
-    role: {
-      type: 'string',
-      isIn: ['admin', 'user'],
-      defaultsTo: 'user',
+    name: { type: 'string', required: false },
+    avatar: { type: 'string', required: false, defaultsTo: '' },
+    isAdmin: { type: 'boolean', defaultsTo: false },
+    roles: {
+        collection: 'role',
+        via: 'users',
+        dominant: true, 
     },
   },
 

@@ -43,21 +43,21 @@ module.exports = {
       }
     }
 
-    let role = 'user'; 
+    let isAdmin = false; 
     if (email === process.env.ADMIN_EMAIL) {
-      role = 'admin'; 
+      isAdmin = true; 
     }
-    const newUser = await User.create({ username, email, password, role }).fetch();
+    const newUser = await User.create({ username, email, password, isAdmin }).fetch();
     if (!newUser) {
       return exits.badRequest({ message: 'Đăng ký không thành công.' });
     }
 
     const token = jwt.sign(
-      { username: newUser.username, email: newUser.email, role: newUser.role },
+      { username: newUser.username, email: newUser.email, isAdmin },
       process.env.JWT_SECRET, 
       { expiresIn: '7d' }
     );
-    return exits.success({ user: { username: newUser.username, role: newUser.role }, token });
+    return exits.success({ user: { username: newUser.username, isAdmin }, token });
     
   }
     

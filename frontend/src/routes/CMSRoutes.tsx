@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import CMSLayout from "../component/CMSLayout";
 import ProductList from "../pages/manage/ProductList";
 import DashBoard from "../pages/home/DashBoard";
+import RoleList from "../pages/manage/RoleList";
 
 const CMSRoutes: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const CMSRoutes: React.FC = () => {
             <Route path="products" element={<ProductList/>} />
             <Route path="users" element={<div>User</div>} />
             <Route path="about" element={<div>About</div>} />
+            <Route path="roles" element={<RoleList/>} />
             <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
     </CMSLayout>

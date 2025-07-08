@@ -23,8 +23,6 @@ const modelsConfigs = {
   }
 };
 const dbType = (process.env.DB_TYPE || 'mysql').toLowerCase();
-console.log("hello");
-console.log(modelsConfigs[dbType].id);
 module.exports.models = {
 
 

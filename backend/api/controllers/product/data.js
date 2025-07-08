@@ -6,7 +6,7 @@ module.exports = {
     if (!user) {
       return exits.success({ message: 'User not authenticated.' });
     }
-    
+    console.log('User 1');
     let [products, activities] = await Promise.all([
         Product.find({ owner: user.id }),
         Activity.find({ owner: user.id }).sort('createdAt DESC').limit(20)
@@ -32,14 +32,14 @@ module.exports = {
       }
       tagCounts[tag]++;
     });
-
+    console.log('User 2');
     const distribution = Object.keys(tagCounts).map(tag => ({
       name: tag,
       value: tagCounts[tag]
     }));
     distribution.sort((a, b) => b.value - a.value); 
     lowStockProducts.sort((a, b) => a.quantity - b.quantity);
-
+    console.log('User 3');
 
     return exits.success({ message: 'Product data retrieved successfully.', distribution, lowStockProducts, activities });
   }

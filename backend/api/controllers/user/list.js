@@ -9,7 +9,7 @@ module.exports = {
     },
   },
   fn: async function (inputs, exits) {
-    const users = await User.find();
+    const users = await User.find().populate('roles');
     return exits.success({ message: 'Find Users OK', users });
   }
 };

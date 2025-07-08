@@ -56,6 +56,7 @@ module.exports = {
   },
   fn: async function (inputs, exits) {
     const user = this.req.user;
+    console.log(this.req.permsList);
     let page = Math.max(1, inputs.page);
     let limit = inputs.limit;
     let skip = (page - 1) * limit;
@@ -117,6 +118,7 @@ module.exports = {
 
     return exits.success({
       message: 'Find Product OK',
+      test: this.req.permsList,
       products,
       pagination: {
         page,

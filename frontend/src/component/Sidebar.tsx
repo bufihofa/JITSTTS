@@ -1,7 +1,6 @@
 import React from "react";
 import { FaHouse, FaBoxArchive, FaUsers, FaCircleInfo   } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
-import { isAdmin } from "../api/auth";
 import ThemeToggle from "./common/ThemeToggle";
 const Sidebar = () => {
     const [isOpen, setIsOpen] = React.useState(true);
@@ -28,13 +27,22 @@ const Sidebar = () => {
                     </NavLink>
                 </div>
                 
-                {isAdmin() && (
-                    <div className="sidebar-item">
-                    <NavLink to="/users" className="sidebar-link">
-                        
-                        <span className="sidebar-text"><FaUsers className="sidebar-icon" /> Users</span>
-                    </NavLink>
-                    </div>
+                {true && (
+                    <>
+                        <div className="sidebar-item">
+                            <NavLink to="/users" className="sidebar-link">
+                                
+                                <span className="sidebar-text"><FaUsers className="sidebar-icon" /> Users</span>
+                            </NavLink>
+                        </div>
+
+                        <div className="sidebar-item">
+                            <NavLink to="/roles" className="sidebar-link">
+                                
+                                <span className="sidebar-text"><FaUsers className="sidebar-icon" /> Roles</span>
+                            </NavLink>
+                        </div>
+                    </>
                 )}
                 
                 <div className="sidebar-item">
