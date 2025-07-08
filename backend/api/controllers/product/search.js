@@ -88,6 +88,7 @@ module.exports = {
         criteria.quantity['<='] = inputs.maxQuantity;
       }
     }
+    const now = new Date();
     let [totalCount, products] = await Promise.all([
         Product.count(criteria),
         Product.find(criteria)
@@ -112,6 +113,7 @@ module.exports = {
           ]);
       }
     }
+    console.log("Time to query DB: ", new Date() - now, "ms");
     const hasMore = page < totalPages;
     const hasPrevious = page > 1;
 
