@@ -53,11 +53,11 @@ module.exports = {
     }
 
     const token = jwt.sign(
-      { username: newUser.username, email: newUser.email, isAdmin },
+      { username: newUser.username, email: newUser.email, isAdmin, id: newUser.id },
       process.env.JWT_SECRET, 
       { expiresIn: '7d' }
     );
-    return exits.success({ user: { username: newUser.username, isAdmin }, token });
+    return exits.success({ user: { username: newUser.username, id: newUser.id, isAdmin }, token });
     
   }
     

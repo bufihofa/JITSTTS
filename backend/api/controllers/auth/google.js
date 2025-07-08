@@ -80,14 +80,15 @@ module.exports = {
         }
         else {
             const jwtToken = jwt.sign(
-                { username: user.username, email: user.email, role: user.role },
+                { username: user.username, email: user.email, isAdmin: user.isAdmin, id: user.id },
                 process.env.JWT_SECRET,
                 { expiresIn: '7d' }
             );
             return exits.success({ 
                 user: { 
                     username: user.username, 
-                    role: user.role 
+                    id: user.id,
+                    isAdmin: user.isAdmin
                 }, 
                 token: jwtToken,
                 message: 'Đăng nhập thành công.'

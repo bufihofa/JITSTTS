@@ -33,11 +33,11 @@ module.exports = {
     bcrypt.compare(password, user.password, (err, result) => {
       if (result) {
         const token = jwt.sign(
-          { username: user.username, email: user.email, role: user.role },
+          { username: user.username, email: user.email, isAdmin: user.isAdmin, id: user.id },
           process.env.JWT_SECRET, 
           { expiresIn: '7d' }
         );
-        return exits.success({ user: { username: user.username, role: user.role }, token });
+        return exits.success({ user: { username: user.username, id: user.id, isAdmin: user.isAdmin}, token });
 
       } else {
         return exits.badRequest({ message: 'Mật khẩu không đúng.' });

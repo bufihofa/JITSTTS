@@ -7,6 +7,7 @@
  * For more information on configuring policies, check out:
  * https://sailsjs.com/docs/concepts/policies
  */
+const requirePerm = require('../api/policies/requirePerm');
 
 module.exports.policies = {
 
@@ -19,7 +20,12 @@ module.exports.policies = {
 
   // '*': true,
   '*': true,
-
-  'product/*': 'isAuthenticated'
+  'product/data': ['isAuthenticated', requirePerm(['product-data'])],
+  
+  'product/create': ['isAuthenticated', requirePerm(['product-create'])],
+  'product/update': ['isAuthenticated', requirePerm(['product-update'])],
+  'product/delete': ['isAuthenticated', requirePerm(['product-delete'])],
+  'product/list': ['isAuthenticated', requirePerm(['product-list'])],
+  'product/search': ['isAuthenticated', requirePerm(['product-search'])],
   
 };

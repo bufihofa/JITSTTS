@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = async function (req, res, proceed) {
-  const { action, subject } = req.options;
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -18,15 +17,11 @@ module.exports = async function (req, res, proceed) {
     if (err) {
       return res.status(401).json({ message: 'Invalid token.' });
     }
-    const user = await User.findOne({ username: payload.username }).populate('roles');
-    if (!user) {
-      return res.status(401).json({ message: 'User not found.' });
+    req.user = {
+      username: payload.username,
+      email: payload.email,
+      id: payload.id
     }
-    const roleIds = user.roles.map(role => role.id);
-    const permsList = await Role.find({id: roleIds}).populate('perms', {select: ['action']});
-    const perms = permsList.flatMap(role => role.perms).flatMap(perm => perm.action);
-    req.permsList = perms;
-    req.user = user;
     return proceed();
   });
 };
