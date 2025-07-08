@@ -14,9 +14,6 @@ module.exports.http = {
   /****************************************************************************
   *                                                                           *
   * Sails/Express middleware to run for every HTTP request.                   *
-  * (Only applies to HTTP requests -- not virtual WebSocket requests.)        *
-  *                                                                           *
-  * https://sailsjs.com/documentation/concepts/middleware                     *
   *                                                                           *
   ****************************************************************************/
 
@@ -25,21 +22,41 @@ module.exports.http = {
     /***************************************************************************
     *                                                                          *
     * The order in which middleware should be run for HTTP requests.           *
-    * (This Sails app's routes are handled by the "router" middleware below.)  *
     *                                                                          *
     ***************************************************************************/
 
-    // order: [
-    //   'cookieParser',
-    //   'session',
-    //   'bodyParser',
-    //   'compress',
-    //   'poweredBy',
-    //   'router',
-    //   'www',
-    //   'favicon',
-    // ],
+    order: [
+      'requestTimer', // Add our custom middleware at the beginning
+      'cookieParser',
+      'session',
+      'bodyParser',
+      'compress',
+      'poweredBy',
+      'router',
+      'www',
+      'favicon',
+    ],
 
+
+    /**
+     * Request timer middleware to track request processing time
+     */
+    requestTimer: (req, res, next) => {
+      // Record start time
+      const startTime = process.hrtime();
+      
+      // Once the response is finished, calculate and log the time taken
+      res.on('finish', () => {
+        const diff = process.hrtime(startTime);
+        const time = diff[0] * 1000 + diff[1] / 1000000; // Convert to milliseconds
+        
+        // Log the request method, URL, and time taken
+        console.log(`${req.method} ${req.originalUrl || req.url} - ${time.toFixed(2)}ms`);
+      });
+      
+      // Continue to the next middleware
+      return next();
+    },
 
     /***************************************************************************
     *                                                                          *

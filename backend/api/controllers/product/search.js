@@ -56,7 +56,6 @@ module.exports = {
   },
   fn: async function (inputs, exits) {
     const user = this.req.user;
-    console.log(this.req.permsList);
     let page = Math.max(1, inputs.page);
     let limit = inputs.limit;
     let skip = (page - 1) * limit;

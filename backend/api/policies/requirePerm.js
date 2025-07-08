@@ -10,8 +10,8 @@ module.exports = function(requiredPerms) {
       return proceed();
     }
 
-    console.log("action: ", req.options.action);
-    console.log("requiredPerms: ", requiredPerms);
+    //console.log("action: ", req.options.action);
+    //console.log("requiredPerms: ", requiredPerms);
 
     if (!req.user) {
       return res.forbidden('You are not logged in.');
@@ -22,7 +22,7 @@ module.exports = function(requiredPerms) {
 
       if (cachedPerms && cachedPerms.length > 0) {
         req.perms = cachedPerms;
-        console.log('Using cached permissions:', req.perms);
+        //console.log('Using cached permissions:', req.perms);
         return proceed();
       }
     }
@@ -39,7 +39,7 @@ module.exports = function(requiredPerms) {
     req.perms = perms;
     userPermsCache.set(cacheKey, perms);
 
-    console.log('Get new permissions', req.perms);
+    //console.log('Get new permissions', req.perms);
     return proceed();
     
   };
