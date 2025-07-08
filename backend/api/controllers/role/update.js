@@ -1,3 +1,4 @@
+const { userPermsCache } = require('../../policies/requirePerm');
 
 module.exports = {
     friendlyName: 'Update Role',
@@ -35,6 +36,7 @@ module.exports = {
             await Role.updateOne({ id }).set({
                 perms: perms
             });
+            userPermsCache.clear(); 
         }
 
         return exits.success({ message: 'Role updated successfully.', role: id });

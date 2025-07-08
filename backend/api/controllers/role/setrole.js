@@ -1,3 +1,4 @@
+const { userPermsCache } = require('../../policies/requirePerm');
 
 module.exports = {
   friendlyName: 'Set Role for User',
@@ -18,6 +19,11 @@ module.exports = {
     }
     // Update the user's roles
     await User.updateOne({ id }).set({ roles: rolesList });
+    const cacheKey = `user-${id}`;
+    if (userPermsCache.has(cacheKey)) {
+        userPermsCache.delete(cacheKey);
+        console.log(`Cleared cache for user ${id}`);
+    }
     return exits.success({ message: 'User roles updated successfully.', userId: id });
   },
 

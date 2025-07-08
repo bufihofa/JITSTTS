@@ -1,3 +1,4 @@
+const userPermsCache = new Map();
 
 module.exports = function(requiredPerms) {
   if (!Array.isArray(requiredPerms)) {
@@ -11,8 +12,19 @@ module.exports = function(requiredPerms) {
 
     console.log("action: ", req.options.action);
     console.log("requiredPerms: ", requiredPerms);
+
     if (!req.user) {
       return res.forbidden('You are not logged in.');
+    }
+    const cacheKey = `user-${req.user.id}`;
+    if (userPermsCache.has(cacheKey)) {
+      const cachedPerms = userPermsCache.get(cacheKey);
+
+      if (cachedPerms && cachedPerms.length > 0) {
+        req.perms = cachedPerms;
+        console.log('Using cached permissions:', req.perms);
+        return proceed();
+      }
     }
 
     const [user, role] = await Promise.all([
@@ -25,9 +37,12 @@ module.exports = function(requiredPerms) {
     const perms = userRoles.flatMap(role => role.perms).flatMap(perm => perm.action);
     
     req.perms = perms;
-    
-    console.log('userPerms', req.perms);
+    userPermsCache.set(cacheKey, perms);
+
+    console.log('Get new permissions', req.perms);
     return proceed();
     
   };
 };
+
+module.exports.userPermsCache = userPermsCache;
