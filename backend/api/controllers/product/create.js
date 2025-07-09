@@ -39,7 +39,6 @@ module.exports = {
 
   fn: async function (inputs, exits) {
     for (let product of inputs.products) {
-      product.owner = this.req.user.id; 
       product.id = undefined;
     }
     const done = await Product.createEach(inputs.products).fetch();
@@ -50,7 +49,6 @@ module.exports = {
     if(done.length > 0) {
       Activity.create({
         type: 'create',
-        owner: this.req.user.id,
         content: content,
         detail: done
       })

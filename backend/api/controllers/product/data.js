@@ -7,10 +7,9 @@ module.exports = {
       return exits.success({ message: 'User not authenticated.' });
     }
     let [products, activities] = await Promise.all([
-        Product.find({ owner: user.id }),
-        Activity.find({ owner: user.id }).sort('createdAt DESC').limit(20)
+        Product.find(),
+        Activity.find().sort('createdAt DESC').limit(20)
     ]);
-    
     const tagCounts = {};
 
     const LOW_STOCK_THRESHOLD = 10; 

@@ -18,7 +18,6 @@ module.exports = {
     }
   },
   fn: async function(inputs, exits) {
-    const user = this.req.user;
     const products = inputs.products;
     const updateProducts = [];
     const failedProducts = [];
@@ -28,41 +27,24 @@ module.exports = {
       else
       {
         const newProduct = {
-            id: product.id,
-            owner: user.id, 
+            id: product.id
         };
 
         if (product.name !== undefined) newProduct.name = product.name;
-          if (product.price !== undefined) newProduct.price = product.price;
-          if (product.tag !== undefined) newProduct.tag = product.tag;
-          if (product.quantity !== undefined) newProduct.quantity = product.quantity;
+        if (product.price !== undefined) newProduct.price = product.price;
+        if (product.tag !== undefined) newProduct.tag = product.tag;
+        if (product.quantity !== undefined) newProduct.quantity = product.quantity;
         
         updateProducts.push(newProduct);
       }
     }
-    //get all products by ids
-    const existingProducts = await Product.find({ 
-      id: updateProducts.map(p => p.id), 
-      owner: user.id 
-    });
-    const finalProducts = [];
-
-    //update existingProducts to updateProducts
     
-    for (let updateProduct of updateProducts) {
-        const existingProduct = existingProducts.find(p => p.id === updateProduct.id);
-        if (!existingProduct) {
-            failedProducts.push(updateProduct);
-            continue;
-        }
-        finalProducts.push({
-            ...existingProduct,
-            ...updateProduct
-        });
-    }
+
+    
+    
     //update
-    if (finalProducts.length > 0) {
-        await Promise.all(finalProducts.map(product => 
+    if (updateProducts.length > 0) {
+        await Promise.all(updateProducts.map(product => 
           Product.updateOne({ id: product.id }).set({
             name: product.name,
             price: product.price,
@@ -71,16 +53,14 @@ module.exports = {
           })
         ));
 
-        let content = `Đã cập nhật ${finalProducts.length} sản phẩm.`;
-        if(finalProducts.length === 1) {
-          content = `Đã cập nhật sản phẩm "${finalProducts[0].name}".`;
+        let content = `Đã cập nhật ${updateProducts.length} sản phẩm.`;
+        if(updateProducts.length === 1) {
+          content = `Đã cập nhật sản phẩm "${updateProducts[0].name}".`;
         }
         Activity.create({ 
           type: 'update',
-          owner: this.req.user.id,
           content: content,
-          detail: finalProducts,
-          oldDetail: existingProducts
+          detail: updateProducts
         })
         .catch(err => {
           console.log('Lỗi:', err);
@@ -89,6 +69,6 @@ module.exports = {
     }
 
 
-    return exits.success({ message: 'Update Product OK', finalProducts, failedProducts });
+    return exits.success({ message: 'Update Product OK', finalProducts: updateProducts, failedProducts });
   }
 }

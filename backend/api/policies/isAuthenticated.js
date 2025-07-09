@@ -20,7 +20,8 @@ module.exports = async function (req, res, proceed) {
     req.user = {
       username: payload.username,
       email: payload.email,
-      id: payload.id
+      id: payload.id,
+      isAdmin: payload.isAdmin,
     }
     return proceed();
   });

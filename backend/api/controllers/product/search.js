@@ -60,7 +60,7 @@ module.exports = {
     let limit = inputs.limit;
     let skip = (page - 1) * limit;
 
-    let criteria = { owner: user.id };
+    let criteria = {};
 
     if (inputs.searchTerm) {
       criteria.or = [

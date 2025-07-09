@@ -10,7 +10,7 @@ module.exports = {
   },
   fn: async function (inputs, exits) {
     const user = this.req.user;
-    const products = await Product.find({ owner: user.id });
+    const products = await Product.find();
     return exits.success({ message: 'Find Product OK', products });
   }
 };

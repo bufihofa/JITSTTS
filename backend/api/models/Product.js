@@ -5,9 +5,6 @@ module.exports = {
     tag: { type: 'string', required: false },
     quantity: { type: 'number', defaultsTo: 0 },
 
-    owner: {
-      model: 'user',
-      required: true,
-    },
+    
   },
 };

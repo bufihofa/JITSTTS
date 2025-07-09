@@ -6,9 +6,6 @@ module.exports = {
         detail: { type: 'json', required: false },
         oldDetail: { type: 'json', required: false },
         createdAt: { type: 'number', autoCreatedAt: true },
-        owner: {
-            model: 'user',
-            required: true,
-        },
+
     },
 }

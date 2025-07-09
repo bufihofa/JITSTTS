@@ -5,9 +5,10 @@ module.exports = function(requiredPerms) {
   }
 
   return async function(req, res, proceed) {
-    if(!requiredPerms || requiredPerms.length === 0) {
+    if(!requiredPerms || requiredPerms.length === 0 || req.user.isAdmin) {
       return proceed();
     }
+
     console.log('all cached permissions:', global.cache);
     //console.log("action: ", req.options.action);
     //console.log("requiredPerms: ", requiredPerms);
@@ -20,9 +21,7 @@ module.exports = function(requiredPerms) {
     if (global.cache.has(cacheKey)) {
       const cachedPerms = global.cache.get(cacheKey);
 
-      if (cachedPerms && cachedPerms.length > 0) {
-        req.perms = cachedPerms;
-      }
+      req.perms = cachedPerms;
       console.log('Using cached permissions for user:', req.user.username);
     }
     else { 

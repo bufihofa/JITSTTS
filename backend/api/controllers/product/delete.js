@@ -22,12 +22,10 @@ module.exports = {
     
     const products = await Product.find({
       id: productIds.map(p => p),
-      owner: user.id
     });
 
     const productsToDelete = await Product.destroy({
       id: productIds.map(p => p),
-      owner: user.id
     });
     let content = `Đã xóa ${products.length} sản phẩm.`;
     if(products && products.length === 1) {
@@ -36,7 +34,6 @@ module.exports = {
     if(productIds.length > 0) {
       Activity.create({
         type: 'delete',
-        owner: this.req.user.id,
         content: content,
         detail: products
       })

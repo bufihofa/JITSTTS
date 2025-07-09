@@ -1,0 +1,221 @@
+.role-management {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--layout-color);
+  box-shadow: 0px 0px 10px var(--shadow-primary);
+  border-radius: 10px;
+  padding: 20px;
+  animation: fadeIn 0.5s ease-in-out;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.notification {
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.notification.error {
+  background-color: rgba(255, 99, 71, 0.1);
+  color: var(--text-error);
+  border-left: 4px solid var(--text-error);
+}
+
+.notification.success {
+  background-color: rgba(75, 181, 67, 0.1);
+  color: var(--text-success);
+  border-left: 4px solid var(--text-success);
+}
+
+.notification.loading {
+  background-color: rgba(61, 126, 168, 0.1);
+  color: var(--text-active);
+  border-left: 4px solid var(--text-active);
+}
+
+.role-tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.role-tab {
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  font-size: 16px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.role-tab:hover {
+  color: var(--text-hover);
+}
+
+.role-tab.active {
+  color: var(--text-active);
+  font-weight: 500;
+}
+
+.role-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--tab-indicator);
+  border-radius: 3px 3px 0 0;
+}
+
+.tab-icon {
+  font-size: 18px;
+}
+
+.role-content {
+  flex: 1;
+  overflow: auto;
+}
+
+.role-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.card {
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px var(--shadow-primary);
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: var(--bg-table-header);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.action-button {
+  background: linear-gradient(to right, var(--bg-button-gradient-start), var(--bg-button-gradient-end));
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow-button);
+}
+
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.role-list, .permission-list, .user-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.role-item, .permission-item, .user-item {
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--border-table);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.role-item:hover, .permission-item:hover, .user-item:hover {
+  background-color: var(--bg-table-hover);
+}
+
+.role-item.selected, .user-item.selected {
+  background-color: var(--bg-selected-row);
+}
+
+.role-name, .permission-name, .user-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.role-desc, .permission-action, .user-email, .user-roles {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.permission-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.permission-label input[type="checkbox"] {
+  accent-color: var(--border-active);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.role-selector {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-table);
+}
+
+.role-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.role-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: var(--bg-tertiary);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.role-option input[type="radio"] {
+  accent-color: var(--border-active);
+  cursor: pointer;
+}
+.helper-text {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  text-align: center;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .role-section {
+    grid-template-columns: 1fr;
+  }
+}

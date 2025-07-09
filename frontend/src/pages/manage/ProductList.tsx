@@ -231,6 +231,11 @@ const ProductList: React.FC = () => {
       setSortDirection('asc');
     }
   }
+
+
+
+
+  
   const sortTH = (by: string, label: string) => {
     if(by === 'name' || by === 'tag' ) {
       return <th onClick={()=>{handleSort(by)}}>{label} {sortBy==by ? (sortDirection=="asc" ? <LuArrowUpAZ className="arrow"/> : <LuArrowDownZA className="arrow"/>) : <LuArrowUpDown className="arrow-unsort"/>}</th>

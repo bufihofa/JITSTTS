@@ -31,16 +31,9 @@ const defaultPermissions = [
 const defaultRoles = [
   []
 ]
+
 module.exports.policies = {
 
-  /***************************************************************************
-  *                                                                          *
-  * Default policy for all controllers and actions, unless overridden.       *
-  * (`true` allows public access)                                            *
-  *                                                                          *
-  ***************************************************************************/
-
-  // '*': true,
   '*': true,
   'product/data': ['isAuthenticated', requirePerm(['product.data'])],
   
@@ -59,3 +52,4 @@ module.exports.policies = {
   'perm/create': ['isAuthenticated', requirePerm(['perm.create'])],
 
 };
+
