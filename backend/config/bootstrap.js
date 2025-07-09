@@ -10,7 +10,7 @@
  */
 
 module.exports.bootstrap = async function(done) {
-
+  global.cache = new Map();
   require('dotenv').config();
   return done();
 
@@ -31,3 +31,4 @@ module.exports.bootstrap = async function(done) {
   // ```
 
 };
+

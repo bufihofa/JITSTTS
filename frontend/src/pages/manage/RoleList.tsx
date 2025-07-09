@@ -135,7 +135,7 @@ const RoleList = () => {
                                     setSelectedPerms([]);
                                 } else {
                                     setSelectedRole(role.id);
-                                    setSelectedPerms(role.perms || []);
+                                    setSelectedPerms(role.role.perms.map((p: any) => p.id) || []);
                                 }
                             }}
                         />
@@ -183,7 +183,7 @@ const RoleList = () => {
 
             {(selectedRole && selectedPerms.length > 0) && (
                 <button onClick={() => updateRolePerms(selectedRole, selectedPerms)}>
-                    Update Role Permissions
+                    ({true && (`${selectedPerms}`)})
                 </button>
             )}
 

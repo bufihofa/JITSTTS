@@ -1,4 +1,3 @@
-const { userPermsCache } = require('../../policies/requirePerm');
 
 module.exports = {
     friendlyName: 'Update Role',
@@ -23,20 +22,20 @@ module.exports = {
             return exits.badRequest({ message: 'ID are required.' });
         }
 
-        // Check if the role exists
         const existingRole = await Role.findOne({ id });
         if (!existingRole) {
             return exits.notFound({ message: 'Role not found.' });
         }
         
-
-        // Update permissions
+        console.log('Updating role:', id);
+        console.log('Permissions to update:', perms);
         
         if (perms && Array.isArray(perms)) {
+            const permIds = perms.map(p => (typeof p === 'object' && p.id) ? p.id : p);
             await Role.updateOne({ id }).set({
-                perms: perms
+                perms: permIds
             });
-            userPermsCache.clear(); 
+            global.cache.clear(); 
         }
 
         return exits.success({ message: 'Role updated successfully.', role: id });
