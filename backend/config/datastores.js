@@ -30,7 +30,7 @@ const datastoreConfigs = {
 const dbType = (process.env.DB_TYPE || 'mysql').toLowerCase();
 
 module.exports.datastores = {
-  default: datastoreConfigs[dbType] || datastoreConfigs.mysql,
+  //default: datastoreConfigs[dbType] || datastoreConfigs.mysql,
 };
 
 

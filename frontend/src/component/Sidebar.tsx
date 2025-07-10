@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHouse, FaBoxArchive, FaUsers, FaCircleInfo   } from "react-icons/fa6";
+import { FaHouse, FaBoxArchive, FaUsers, FaCircleInfo, FaKey   } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import ThemeToggle from "./common/ThemeToggle";
 const Sidebar = () => {
@@ -21,6 +21,12 @@ const Sidebar = () => {
                     </NavLink>
                 </div>
                 <div className="sidebar-item">
+                    <NavLink to="/dashboard" className="sidebar-link">
+                        
+                        <span className="sidebar-text"><FaHouse className="sidebar-icon" /> Dashboard</span>
+                    </NavLink>
+                </div>
+                <div className="sidebar-item">
                     <NavLink to="/products" className="sidebar-link">
                         
                         <span className="sidebar-text"><FaBoxArchive className="sidebar-icon" /> Products</span>
@@ -37,9 +43,9 @@ const Sidebar = () => {
                         </div>
 
                         <div className="sidebar-item">
-                            <NavLink to="/roles" className="sidebar-link">
+                            <NavLink to="/permissions" className="sidebar-link">
                                 
-                                <span className="sidebar-text"><FaUsers className="sidebar-icon" /> Roles</span>
+                                <span className="sidebar-text"><FaKey className="sidebar-icon" /> Permissions</span>
                             </NavLink>
                         </div>
                     </>

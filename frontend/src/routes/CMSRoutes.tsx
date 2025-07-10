@@ -8,12 +8,12 @@ const CMSRoutes: React.FC = () => {
   return (
     <CMSLayout>
         <Routes>
-            <Route path="home" element={<DashBoard/>} />
-
+            <Route path="home" element={<div>Home</div>} />
+            <Route path="dashboard" element={<DashBoard/>} />
             <Route path="products" element={<ProductList/>} />
             <Route path="users" element={<div>User</div>} />
             <Route path="about" element={<div>About</div>} />
-            <Route path="roles" element={<RoleList/>} />
+            <Route path="permissions" element={<RoleList/>} />
             <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
     </CMSLayout>

@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { axiosInstance } from "../../api/axiosInstance";
 import CMSInput from "../../component/common/Input";
-import "./RoleManagement.css";
-import { FaPlus, FaUsers, FaCog, FaKey, FaShieldAlt, FaSave } from "react-icons/fa";
+import "./RoleList.css";
+import { MdEdit, MdDelete } from "react-icons/md";
+
+import { FaPlus, FaUsers, FaCog, FaKey, FaShieldAlt, FaSave, FaExclamationTriangle } from "react-icons/fa";
+import Button from "../../component/common/Button";
 
 interface Role {
   id: string;
@@ -17,400 +20,243 @@ interface Permission {
   action: string;
 }
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  roles: Role[];
-}
 
 const RoleList: React.FC = () => {
-  // State for tabs
-  const [activeTab, setActiveTab] = useState<'config' | 'setrole'>('config');
-  
-  // State for roles
-  const [rolesList, setRolesList] = useState<Role[]>([]);
-  const [roleName, setRoleName] = useState("");
-  const [roleDesc, setRoleDesc] = useState("");
-  const [selectedRole, setSelectedRole] = useState<string | null>(null);
-  
-  // State for permissions
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [roleName, setRoleName] = useState<string>("");
+  const [roleDesc, setRoleDesc] = useState<string>("");
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+
   const [permsList, setPermsList] = useState<Permission[]>([]);
   const [permName, setPermName] = useState("");
   const [permAction, setPermAction] = useState("");
   const [selectedPerms, setSelectedPerms] = useState<string[]>([]);
   
-  // State for users
-  const [usersList, setUsersList] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
-  const [selectedUserRoles, setSelectedUserRoles] = useState<string[]>([]);
-  
-  // State for feedback
-  const [feedback, setFeedback] = useState({ message: "", type: "" });
-
-  // Initial data load
-  useEffect(() => {
-    getRoles();
-    getPerms();
-    getUsers();
-  }, []);
-
-  // API functions
-  const getRoles = async () => {
+  const isChanged = () => {
+    if (!selectedRole) return false;
+    
+    const originalPerms = selectedRole.perms?.map(p => p.id) || [];
+    const currentPerms = selectedPerms.sort();
+    const sortedOriginalPerms = originalPerms.sort();
+    console.log("render");
+    return JSON.stringify(sortedOriginalPerms) !== JSON.stringify(currentPerms);
+  }
+  const fetchRoles = async () => {
     try {
-      const response = await axiosInstance.get('api/role/list');
-      setRolesList(response.data.roles);
-      return response.data;
+      const response = await axiosInstance.get("/api/role/list");
+      console.log(response.data.roles);
+      setRoles(response.data.roles || []);
+      console.log("setrole");
+      if(selectedRole) {
+        const updatedSelectedRole = (response.data.roles || []).find((role: Role) => role.id === selectedRole.id);
+        if (updatedSelectedRole) {
+          handleRoleSelect(updatedSelectedRole);
+        }
+      }
     } catch (error) {
-      showFeedback("Error fetching roles", "error");
-      console.error("Error fetching roles:", error);
+      console.error("Failed to fetch roles:", error);
     }
   };
-
-  const getUsers = async () => {
+  const fetchPermissions = async () => {
     try {
-      const response = await axiosInstance.get('api/user/list');
-      setUsersList(response.data.users);
-      return response.data;
+      const response = await axiosInstance.get("/api/perm/list");
+      setPermsList((response.data.perms || []).sort((a: Permission, b: Permission) => a.name.localeCompare(b.name)));
     } catch (error) {
-      showFeedback("Error fetching users", "error");
-      console.error("Error fetching users:", error);
+      console.error("Failed to fetch permissions:", error);
+    }
+  };
+  useEffect(() => {
+    fetchRoles();
+    fetchPermissions();
+  }, []);
+
+  const handleRoleSelect = (selected: Role) => {
+    setSelectedRole(selected);
+    setSelectedPerms(selected?.perms?.map(p => p.id) || []);
+  };
+  const handlePermSelect = (selected: Permission) => {
+    setSelectedPerms(prev => {
+      if (prev.includes(selected.id)) {
+        return prev.filter(id => id !== selected.id);
+      } else {
+        return [...prev, selected.id];
+      }
+    });
+  };
+  
+  const updateRolePerms = async () => {
+    if (!selectedRole) return;
+    try {
+      const response = await axiosInstance.patch("/api/role/update", {
+        id: selectedRole.id,
+        perms: selectedPerms
+      });
+      if (response.status === 200) {
+        console.log("Permissions updated successfully");
+        fetchRoles();
+        
+      } else {
+        console.error("Failed to update permissions:", response.data);
+      }
+    } catch (error) {
+      console.error("Error updating permissions:", error);
     }
   }
-
   const createRole = async () => {
     if (!roleName) {
-      showFeedback("Role name is required", "error");
+      alert("Không được để trống thông tin");
       return;
     }
     
     try {
       await axiosInstance.post('api/role/create', { name: roleName, desc: roleDesc });
-      showFeedback(`Role "${roleName}" created successfully`, "success");
       setRoleName("");
       setRoleDesc("");
-      getRoles();
+      fetchRoles();
     } catch (error) {
-      showFeedback("Error creating role", "error");
       console.error("Error creating role:", error);
     }
   };
-
-  const getPerms = async () => {
-    try {
-      const response = await axiosInstance.get('api/perm/list');
-      setPermsList(response.data.perms);
-      return response.data;
-    } catch (error) {
-      showFeedback("Error fetching permissions", "error");
-      console.error("Error fetching permissions:", error);
-    }
-  };
-
   const createPerm = async () => {
     if (!permName || !permAction) {
-      showFeedback("Permission name and action are required", "error");
+      alert("Không được để trống thông tin");
       return;
     }
     
     try {
       await axiosInstance.post('api/perm/create', { name: permName, action: permAction });
-      showFeedback(`Permission "${permName}" created successfully`, "success");
       setPermName("");
       setPermAction("");
-      getPerms();
+      fetchPermissions();
     } catch (error) {
-      showFeedback("Error creating permission", "error");
       console.error("Error creating permission:", error);
     }
   }
-
-  const updateRolePerms = async () => {
-    if (!selectedRole) {
-      showFeedback("No role selected", "error");
-      return;
-    }
-    
-    try {
-      await axiosInstance.patch('api/role/update', { id: selectedRole, perms: selectedPerms });
-      showFeedback("Role permissions updated successfully", "success");
-      getRoles();
-    } catch (error) {
-      showFeedback("Error updating role permissions", "error");
-      console.error("Error updating role permissions:", error);
-    }
-  }
-
-  const setRole = async () => {
-    if (!selectedUser || selectedUserRoles.length === 0) {
-      showFeedback("User and at least one role must be selected", "error");
-      return;
-    }
-    
-    try {
-      await axiosInstance.patch('api/role/setrole', { id: selectedUser, rolesList: selectedUserRoles });
-      showFeedback("User roles updated successfully", "success");
-      getUsers();
-    } catch (error) {
-      showFeedback("Error setting user roles", "error");
-      console.error("Error setting user roles:", error);
-    }
-  }
-
-  // Helper functions
-  const showFeedback = (message: string, type: string) => {
-    setFeedback({ message, type });
-    setTimeout(() => setFeedback({ message: "", type: "" }), 3000);
-  };
-
-  const handleRoleSelect = (roleId: string) => {
-    const role = rolesList.find(r => r.id === roleId);
-    setSelectedRole(roleId);
-    setSelectedPerms(role?.perms?.map(p => p.id) || []);
-  };
-
-  const handleUserSelect = (userId: string) => {
-    const user = usersList.find(u => u.id === userId);
-    setSelectedUser(userId);
-    setSelectedUserRoles(user?.roles?.map(r => r.id) || []);
-  };
-
-  const togglePermission = (permId: string) => {
-    setSelectedPerms(prev => 
-      prev.includes(permId)
-        ? prev.filter(id => id !== permId)
-        : [...prev, permId]
-    );
-  };
-
-  const toggleUserRole = (roleId: string) => {
-    setSelectedUserRoles(prev => 
-      prev.includes(roleId)
-        ? prev.filter(id => id !== roleId)
-        : [...prev, roleId]
-    );
-  };
-
-  // Render tab content
-  const renderConfigTab = () => (
-    <div className="role-config-container">
-      <div className="role-section">
-        <div className="section-header">
-          <h3><FaShieldAlt /> Roles</h3>
-          <div className="section-actions">
-            <button 
-              className="refresh-button" 
-              onClick={getRoles}
-              title="Refresh roles"
-            >
-              Refresh
-            </button>
+  const roleTab = useMemo(() => {
+    return (
+      <div className="role-item">
+        <div className="role-header">
+          <div className="role-header-container">
+            <FaShieldAlt className="role-icon" />
+            <p className="role-title">Roles</p>
+            <div className="role-header-button">
+              <Button 
+                onAddButton={createRole}
+                text="Add Role"
+              />
+            </div>
           </div>
-        </div>
-        
-        <div className="create-form">
-          <div className="form-row">
+          <div className="role-header-input">
             <CMSInput
-              label="Role Name"
-              value={roleName}
-              onChange={setRoleName}
-              placeholder="Enter role name"
-            />
+                label="Name"
+                value={roleName}
+                onChange={setRoleName}
+                placeholder="Enter role name"
+              />
             <CMSInput
               label="Description"
               value={roleDesc}
               onChange={setRoleDesc}
               placeholder="Enter role description"
             />
-            <button className="create-button" onClick={createRole}>
-              <FaPlus /> Create Role
-            </button>
           </div>
         </div>
-
-        <div className="items-list role-list">
-          {rolesList?.map((role) => (
-            <div 
-              key={role.id} 
-              className={`list-item ${selectedRole === role.id ? 'selected' : ''}`}
-              onClick={() => handleRoleSelect(role.id)}
-            >
-              <div className="item-name">{role.name}</div>
-              <div className="item-description">{role.desc}</div>
-            </div>
-          ))}
+        <div className="role-content">
+          <div className="role-list">
+    
+            {roles.map((role) => (
+              <div key={role.id} className={`${selectedRole?.id === role.id ? "selected" : ""} role-item-row`}>
+                <input
+                  type="radio"
+                  name="selectedRole"
+                  value={role.id}
+                  checked={selectedRole?.id === role.id}
+                />
+                <div className="role-item-info" onClick={() => handleRoleSelect(role)}>
+                    <p className="role-name">
+                    
+                    {role.name}
+                    </p>
+                  <p className="role-desc">{`${role.desc}.`}</p>
+                </div>
+                <button className="role-button-delete">
+                  <MdDelete /> 
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-
-      <div className="permissions-section">
-        <div className="section-header">
-          <h3><FaKey /> Permissions</h3>
-          <div className="section-actions">
-            <button 
-              className="refresh-button" 
-              onClick={getPerms}
-              title="Refresh permissions"
-            >
-              Refresh
-            </button>
+    );
+  },[roleName, roleDesc, roles, selectedRole]);
+  const permTab = useMemo(() => {
+    return (
+      <div className="role-item">
+        <div className="role-header">
+          <div className="role-header-container">
+            <FaKey className="role-icon" />
+            <p className="role-title">Permissions</p>
+            <div className="role-header-button">
+              <Button 
+                onAddButton={createPerm}
+                text="Add Permission"
+              />
+            </div>
           </div>
-        </div>
-
-        <div className="create-form">
-          <div className="form-row">
+          <div className="role-header-input">
             <CMSInput
-              label="Permission Name"
-              value={permName}
-              onChange={setPermName}
-              placeholder="Enter permission name"
-            />
+                label="Name"
+                value={permName}
+                onChange={setPermName}
+                placeholder="Enter permission name"
+              />
             <CMSInput
               label="Action"
               value={permAction}
               onChange={setPermAction}
               placeholder="Enter permission action"
             />
-            <button className="create-button" onClick={createPerm}>
-              <FaPlus /> Create Permission
-            </button>
           </div>
         </div>
-
-        {selectedRole && (
-          <div className="assign-permissions">
-            <div className="assign-header">
-              <h4>Assign permissions to: {rolesList.find(r => r.id === selectedRole)?.name}</h4>
-              <button className="save-button" onClick={updateRolePerms}>
-                <FaSave /> Save Permissions
-              </button>
-            </div>
-            
-            <div className="permissions-grid">
-              {permsList?.map((perm) => (
-                <div 
-                  key={perm.id} 
-                  className={`permission-item ${selectedPerms.includes(perm.id) ? 'selected' : ''}`}
-                  onClick={() => togglePermission(perm.id)}
-                >
-                  <div className="checkbox">
-                    <input
-                      type="checkbox"
-                      checked={selectedPerms.includes(perm.id)}
-                      onChange={() => togglePermission(perm.id)}
-                    />
-                  </div>
-                  <div className="permission-info">
-                    <div className="permission-name">{perm.name}</div>
-                    <div className="permission-action">{perm.action}</div>
-                  </div>
+        <div className="role-content">
+          <div className="role-list">
+            {permsList.map((perm) => (
+              <div key={perm.id} className={`${selectedPerms.includes(perm.id) ? "selected" : ""} role-item-row perm-item-row ${!selectedRole ? "disabled" : ""}`}>
+                <input
+                  type="checkbox"
+                  name="selectedRole"
+                  disabled={!selectedRole}  
+                  value={perm.id}
+                  checked={selectedPerms.includes(perm.id)}
+                />
+                <div className={`role-item-info perm-item-info ${!selectedRole ? "disabled" : ""}`} onClick={() => {handlePermSelect(perm)}}>
+                    <p className="role-name">
+                    
+                    {perm.name}
+                    </p>
+                  <p className="role-desc">{`${perm.action}`}</p>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
-  const renderSetRoleTab = () => (
-    <div className="set-role-container">
-      <div className="users-section">
-        <div className="section-header">
-          <h3><FaUsers /> Users</h3>
-          <div className="section-actions">
-            <button 
-              className="refresh-button" 
-              onClick={getUsers}
-              title="Refresh users"
-            >
-              Refresh
-            </button>
-          </div>
-        </div>
-
-        <div className="users-list">
-          {usersList.map((user) => (
-            <div 
-              key={user.id} 
-              className={`user-item ${selectedUser === user.id ? 'selected' : ''}`}
-              onClick={() => handleUserSelect(user.id)}
-            >
-              <div className="user-info">
-                <div className="user-name">{user.username}</div>
-                <div className="user-email">{user.email}</div>
-              </div>
-              <div className="user-roles">
-                {user.roles && user.roles.length > 0 ? 
-                  user.roles.map(role => role.name).join(', ') : 
-                  "No roles assigned"
-                }
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {selectedUser && (
-        <div className="assign-roles">
-          <div className="assign-header">
-            <h4>Assign roles to: {usersList.find(u => u.id === selectedUser)?.username}</h4>
-            <button className="save-button" onClick={setRole}>
-              <FaSave /> Save User Roles
-            </button>
-          </div>
-          
-          <div className="roles-grid">
-            {rolesList?.map((role) => (
-              <div 
-                key={role.id} 
-                className={`role-item ${selectedUserRoles.includes(role.id) ? 'selected' : ''}`}
-                onClick={() => toggleUserRole(role.id)}
-              >
-                <div className="checkbox">
-                  <input
-                    type="checkbox"
-                    checked={selectedUserRoles.includes(role.id)}
-                    onChange={() => toggleUserRole(role.id)}
-                  />
-                </div>
-                <div className="role-info">
-                  <div className="role-name">{role.name}</div>
-                  <div className="role-description">{role.desc}</div>
-                </div>
+                <button className="role-button-delete">
+                  <MdDelete /> 
+                </button>
               </div>
             ))}
           </div>
         </div>
-      )}
-    </div>
-  );
-
-  return (
-    <div className="role-management">
-      {feedback.message && (
-        <div className={`feedback-message ${feedback.type}`}>
-          {feedback.message}
+        
+        <div className={`role-save-button ${!selectedRole || !isChanged() ? "disabled" : ""}`}>
+          <Button 
+            onAddButton={updateRolePerms}
+            text="Save Changes"
+          />
         </div>
-      )}
-      
-      <div className="role-tabs">
-        <button 
-          className={`tab-button ${activeTab === 'config' ? 'active' : ''}`}
-          onClick={() => setActiveTab('config')}
-        >
-          <FaCog /> Configuration
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'setrole' ? 'active' : ''}`}
-          onClick={() => setActiveTab('setrole')}
-        >
-          <FaUsers /> Assign Roles
-        </button>
       </div>
-
-      <div className="tab-content">
-        {activeTab === 'config' ? renderConfigTab() : renderSetRoleTab()}
-      </div>
+    );
+  }, [permName,permAction,permsList,selectedPerms]);
+  return (
+    <div className="role-container">
+      {roleTab}
+      {permTab}
     </div>
   );
 };

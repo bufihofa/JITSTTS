@@ -11,6 +11,29 @@
 
 module.exports.bootstrap = async function(done) {
   global.cache = new Map();
+  const permCount = await Perm.count();
+  const defaultPermissions  = require('./policies').defaultPermissions;
+  const defaultRoles = require('./policies').defaultRoles;
+
+  if (permCount === 0) {
+    sails.log.info('Creating default permissions...');
+    
+    try {
+      // Create all permissions from the defaultPermissions array
+      console.log(defaultPermissions);
+      await Perm.createEach(defaultPermissions);
+      sails.log.info(`Successfully created ${defaultPermissions.length} default permissions`);
+      
+      await Role.createEach(defaultRoles);
+      sails.log.info(`Successfully created ${defaultRoles.length} default roles`);
+
+    } catch (error) {
+      sails.log.error('Error creating default permissions:', error);
+    }
+  } else {
+    sails.log.info(`Found ${permCount} existing permissions, skipping default creation`);
+  }
+
   require('dotenv').config();
   return done();
 

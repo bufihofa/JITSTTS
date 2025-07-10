@@ -6,7 +6,9 @@ module.exports = {
     fn: async function (inputs, exits) {
         try {
             //const roles = await Role.find().populate('perms').populate('users');
-            const roles = await Role.find().populate('perms').populate('users');
+            const now = new Date();
+            const roles = await Role.find().populate('perms');
+            console.log('Time of fetching roles: ', new Date() - now, 'ms');
             if (!roles || roles.length === 0) {
                 return exits.success({ message: 'No roles found.' });
             }

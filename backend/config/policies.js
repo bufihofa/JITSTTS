@@ -9,29 +9,31 @@
  */
 const requirePerm = require('../api/policies/requirePerm');
 const defaultPermissions = [
-  {'name': 'Toàn quyền sản phẩm', 'action': 'product.*'},
-  {'name': 'Xem dữ liệu tổng quan', 'action': 'product.data'},
-  {'name': 'Tạo sản phẩm', 'action': 'product.create'},
-  {'name': 'Cập nhật sản phẩm', 'action': 'product.update'},
-  {'name': 'Xóa sản phẩm', 'action': 'product.delete'},
-  {'name': 'Xem danh sách sản phẩm', 'action': 'product.list'},
-  {'name': 'Tìm kiếm sản phẩm', 'action': 'product.search'},
+  {name: 'Product - *', action: 'product.*', tag: 'default'},
+  {name: 'Product - Data', action: 'product.data'},
+  {name: 'Product - Create', action: 'product.create'},
+  {name: 'Product - Update', action: 'product.update'},
+  {name: 'Product - Delete', action: 'product.delete'},
+  {name: 'Product - View all', action: 'product.list'},
+  {name: 'Product - Search', action: 'product.search'},
   
-  {'name': 'Xem danh sách người dùng', 'action': 'user.list'},
+  {name: 'User - View all', action: 'user.list'},
   
-  {'name': 'Xem danh sách Role', 'action': 'role.list'},
-  {'name': 'Tạo Role mới', 'action': 'role.create'},
-  {'name': 'Cập nhật Role', 'action': 'role.update'},
-  {'name': 'Gán Role cho User', 'action': 'role.setrole'},
+  {name: 'Role - View all', action: 'role.list'},
+  {name: 'Role - Create', action: 'role.create'},
+  {name: 'Role - Update', action: 'role.update'},
+  {name: 'Role - Set Role', action: 'role.setrole'},
   
-  {'name': 'Xem danh sách Quyền', 'action': 'perm.list'},
-  {'name': 'Tạo Quyền mới', 'action': 'perm.create'}
+  {name: 'Permission - View all', action: 'perm.list'},
+  {name: 'Permission - Create', action: 'perm.create'}
 ]
-
 const defaultRoles = [
-  []
+  {name: 'Nhân viên', desc: 'Người nghèo'},
+  {name: 'Quản lí', desc: 'Người hơi nghèo'}
 ]
 
+module.exports.defaultRoles = defaultRoles;
+module.exports.defaultPermissions = defaultPermissions;
 module.exports.policies = {
 
   '*': true,
