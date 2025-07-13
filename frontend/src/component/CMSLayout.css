@@ -92,6 +92,7 @@ body {
     border-radius: 10px 0px 0px 15px;
     box-shadow: 1px 0px 1px var(--shadow-secondary);
     transition: all 0.3s ease-in-out, background-color 0.001s ease;
+    overflow-y: auto;
 }
 .app-sidebar-close {
     display: flex;
@@ -101,12 +102,12 @@ body {
     border-radius: 10px 0px 0px 15px;
     box-shadow: 1px 0px 1px var(--shadow-secondary);
     transition: all 0.3s ease-in-out, background-color 0.001s ease;
+    overflow-y: auto;
 }
 
 .content-area {
     display: flex;
     flex-direction: column;
-    padding: 3% 3% 1% 4%;
     animation: fadeIn 0.2s ease-in-out;
     overflow: auto;
     height: 90%;

@@ -1,3 +1,6 @@
+import axios from "axios";
+import { axiosInstance } from "../api/axiosInstance";
+
 const storage = {
     saveLoginData: (token: string, role: string, username: string) => {
         localStorage.setItem("TOKEN", token);
@@ -55,6 +58,25 @@ const storage = {
     getLastAccess:() => localStorage.getItem("LAST_ACCESS"),
     setLastAccess:() => localStorage.setItem("LAST_ACCESS", new Date().toISOString()),
 
+
+    checkPageConfig:() => {
+        const have = sessionStorage.getItem("PAGE_CONFIG");
+        if (have) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    fetchPageConfig: async () => {
+        const pageConfig = await axiosInstance.get('/api/setting/fetch');
+        console.log("Fetched page config", pageConfig);
+        if (pageConfig) {
+            return true;
+        } else {
+            return false;
+        }
+    },
 }
 
 export default storage;

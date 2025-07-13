@@ -32,7 +32,12 @@ const Sidebar = () => {
                         <span className="sidebar-text"><FaBoxArchive className="sidebar-icon" /> Products</span>
                     </NavLink>
                 </div>
-                
+                <div className="sidebar-item">
+                    <NavLink to="/config" className="sidebar-link">
+                        
+                        <span className="sidebar-text"><FaBoxArchive className="sidebar-icon" /> Config</span>
+                    </NavLink>
+                </div>
                 {true && (
                     <>
                         <div className="sidebar-item">

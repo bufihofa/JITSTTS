@@ -1,4 +1,4 @@
-.product-form-container{
+.dynamic-form-container{
     position: fixed;
     top: 0;
     left: 0;
@@ -11,34 +11,34 @@
     justify-content: center;
 }
 
-.product-form{
+.dynamic-form{
     border-radius: 10px;
     background-color: var(--bg-primary);
     box-shadow: 0 8px 32px var(--app-container-glow-color),
                 0 8px 32px var(--app-container-glow-color);
 }
 
-.product-form-header-text{
+.dynamic-form-header-text{
     font-size: 20px;
     animation: fadeIn 0.3s ease-in;
     margin-bottom: 0px;
     padding-bottom: 0px;
     margin-top: 0px;
 }
-.product-form-header-id{
+.dynamic-form-header-id{
     font-size: 13px;
     animation: fadeIn 0.3s ease-in;
     color: var(--text-active);
     padding: 0px;
     animation: fadeIn 0.5s ease-in;
 }
-.product-form-body{
+.dynamic-form-body{
     border-radius: 10px;
     margin: 30px;
     width: 300px;
     background-color: var(--bg-primary);
 }
-.product-form-header {
+.dynamic-form-header {
     background-color: var(--bg-accent);
     display: flex;
     flex-direction: column;
@@ -50,7 +50,7 @@
     padding-top: 10px;
 }
 
-.product-form-header-text {
+.dynamic-form-header-text {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);

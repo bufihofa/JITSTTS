@@ -1,5 +1,5 @@
 module.exports = {
-  friendlyName: 'Search Product',
+  friendlyName: 'Search User',
   
   inputs: {
     page: {
@@ -17,11 +17,10 @@ module.exports = {
       type: 'string',
       defaultsTo: ''
     },
-    
     sortBy: {
-      description: 'Field to sort by (name, price, quantity, tag)',
+      description: 'Field to sort by',
       type: 'string',
-      defaultsTo: 'name'
+      defaultsTo: 'username'
     },
     sortDirection: {
       description: 'Sort direction (asc or desc)',
@@ -38,42 +37,23 @@ module.exports = {
   },
   fn: async function (inputs, exits) {
     const user = this.req.user;
-    console.log(inputs);
     let page = Math.max(1, inputs.page);
     let limit = inputs.limit;
     let skip = (page - 1) * limit;
 
     let criteria = {};
+
     if (inputs.searchTerm) {
-      criteria.or = [
-      { name: { 'like': `%${inputs.searchTerm}%` } },
-      { tag: { 'like': `%${inputs.searchTerm}%` } }
-      ];
+        criteria.or = [
+          { name: { contains: inputs.searchTerm } }
+        ];
     }
 
-    if (inputs.minPrice !== undefined || inputs.maxPrice !== undefined) {
-      criteria.price = {};
-      if (inputs.minPrice !== undefined) {
-        criteria.price['>='] = inputs.minPrice;
-      }
-      if (inputs.maxPrice !== undefined) {
-        criteria.price['<='] = inputs.maxPrice;
-      }
-    }
-
-    if (inputs.minQuantity !== undefined || inputs.maxQuantity !== undefined) {
-      criteria.quantity = {};
-      if (inputs.minQuantity !== undefined) {
-        criteria.quantity['>='] = inputs.minQuantity;
-      }
-      if (inputs.maxQuantity !== undefined) {
-        criteria.quantity['<='] = inputs.maxQuantity;
-      }
-    }
+   
     const now = new Date();
     let [totalCount, products] = await Promise.all([
-        Product.count(criteria),
-        Product.find(criteria)
+        User.count(criteria),
+        User.find(criteria)
             .skip(skip)
             .limit(limit)
             .sort([
@@ -86,7 +66,7 @@ module.exports = {
       page = totalPages;
       if(page > 0){
         skip = (page - 1) * limit;
-        products = await Product.find(criteria)
+        products = await User.find(criteria)
           .skip(skip)
           .limit(limit)
           .sort([

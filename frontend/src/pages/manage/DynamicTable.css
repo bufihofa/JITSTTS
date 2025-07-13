@@ -1,0 +1,96 @@
+.dynamic-table-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    overflow: auto;
+    padding: 0px;
+    table-layout: fixed; 
+    margin: 0px;
+    margin-top: 10px;
+    height: 100%;
+}
+
+.dynamic-table-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dynamic-table-container::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+}
+
+.dynamic-table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+.dynamic-table-container thead, .dynamic-table-container th{
+    position: sticky;
+    top: 0;
+    flex-direction: column;
+    background-color: var(--bg-table-header);
+    border-bottom: 1px solid var(--border-table-header);
+    border-top: 1px solid var(--border-table-header);
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 16px;
+    padding-bottom: 11px;
+    padding-top: 11px;
+    z-index: 10;
+}
+
+.dynamic-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    height: 100%;
+}
+
+
+.row td {
+    border-bottom: 1px solid var(--border-table);
+    color: var(--text-table);
+    font-size: 15px;
+    font-weight: 450;
+    vertical-align: middle; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+tr{
+    text-align: left;
+}
+
+.row{
+    height: 30px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.empty-row{
+    height: 30px;
+    animation: fadeIn 0.1s ease-in-out;
+}
+
+.row:hover {
+    background-color: var(--bg-table-hover);
+}
+
+.arrow {
+    font-size: 15px;
+    align-self: center;
+    color: var(--text-secondary);
+}
+.arrow-unsort {
+    font-size: 15px;
+    align-self: center;
+    color: var(--text-secondary);
+}
+.dynamic-table-action {
+    padding: 0px;
+    margin: 0px;
+    margin-right: 3px;
+    font-size: 20px;
+    color: var(--text-primary);
+    background-color: transparent;
+    transition: transform 0.3s ease;
+}
+.dynamic-table-actions {
+    display: flex;
+    flex-direction: row;
+}

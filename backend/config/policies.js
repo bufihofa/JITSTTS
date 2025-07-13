@@ -40,12 +40,20 @@ module.exports.policies = {
   'product/data': ['isAuthenticated', requirePerm(['product.data'])],
   
   'product/create': ['isAuthenticated', requirePerm(['product.create'])],
+  'product/create-one': ['isAuthenticated', requirePerm(['product.create'])],
+
   'product/update': ['isAuthenticated', requirePerm(['product.update'])],
+  'product/update-one': ['isAuthenticated', requirePerm(['product.update'])],
+
   'product/delete': ['isAuthenticated', requirePerm(['product.delete'])],
+  'product/delete-one': ['isAuthenticated', requirePerm(['product.delete'])],
+
   'product/list': ['isAuthenticated', requirePerm(['product.list'])],
   'product/search': ['isAuthenticated', requirePerm(['product.search'])],
   
   'user/list': ['isAuthenticated', requirePerm(['user.list'])],
+  'user/search': ['isAuthenticated', requirePerm(['user.search'])],
+  
   'role/list': ['isAuthenticated', requirePerm(['role.list'])],
   'role/create': ['isAuthenticated', requirePerm(['role.create'])],
   'role/update': ['isAuthenticated', requirePerm(['role.update'])],
@@ -53,5 +61,11 @@ module.exports.policies = {
   'perm/list': ['isAuthenticated', requirePerm(['perm.list'])],
   'perm/create': ['isAuthenticated', requirePerm(['perm.create'])],
 
+  'setting/list': ['isAuthenticated', requirePerm(['setting.list'])],
+  'setting/create': ['isAuthenticated', requirePerm(['setting.create'])],
+  'setting/update': ['isAuthenticated', requirePerm(['setting.update'])],
+  'setting/delete': ['isAuthenticated', requirePerm(['setting.delete'])],
+  
+  'setting/fetch': ['isAuthenticated', requirePerm(['setting.fetch'])],
 };
 

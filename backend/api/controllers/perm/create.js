@@ -7,13 +7,11 @@ module.exports = {
   fn: async function (inputs, exits) {
     const { name, action } = inputs;
 
-    // Check if the permission already exists
     const existingPerm = await Perm.findOne({ name });
     if (existingPerm) {
       return exits.success({ message: 'Permission already exists.', perm: existingPerm });
     }
 
-    // Create the new permission
     const newPerm = await Perm.create({ name, action }).fetch();
     
         

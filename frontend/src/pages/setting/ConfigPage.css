@@ -1,0 +1,55 @@
+.config-page {
+    animation: fadeIn 0.7s ease-in;
+    height: 85%;
+}
+
+.config-header {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid var(--border-table-header);
+    padding: 0px 20px;
+    margin: 0;
+    background-color: var(--layout-color);
+}
+.config-header-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0px 0px 0px 0px;
+    color: var(--text-primary);
+}
+.config-header-buttons {
+    display: flex;
+    align-items: center;
+    margin-top: 0px;
+    padding: 0;
+    gap: 0px;
+
+}
+.config-header-button {
+    display: flex;
+    font-size: 18px;
+    justify-content: center;
+    padding: 8px 16px;
+    border-radius: 0px;
+    background-color: var(--bg-header-button);
+    border-bottom: 2px solid rgba(255, 255, 255, 0);
+    color: var(--text-secondary);
+    transition: transform 0.2s ease-in;
+    border-right: none;
+    border-left: none;
+    align-items: center;
+}
+
+.button-active {
+    border-bottom: 2px solid var(--border-active);
+    color: #8EBDDA;
+}
+.page-tab-container{
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  margin: 3% 3% 1% 4%;
+  height: 100%;
+  overflow: auto;
+  gap: 5%;
+}

@@ -40,15 +40,21 @@ module.exports.routes = {
   'POST /api/auth/google':      {action: 'auth/google'},
 
   //PRODUCT
+  'POST /api/product': {action: 'product/create-one'},
+  'DELETE /api/product/:id':    {action: 'product/delete-one'},
+  'PATCH /api/product/:id':     {action: 'product/update-one'},
+  
   'GET /api/product/search':    {action: 'product/search'},
   'GET /api/product/list':      {action: 'product/list'},
   'POST /api/product/create':   {action: 'product/create'},
   'PATCH /api/product/update':  {action: 'product/update'},
   'DELETE /api/product/delete': {action: 'product/delete'},
   
+
   'GET /api/product/data':      {action: 'product/data'},
   //USER
   'GET /api/user/list':         {action: 'user/list'},
+  'GET /api/user/search':       {action: 'user/search'},
 
   //ROLE
   'GET /api/role/list':         {action: 'role/list'},
@@ -60,6 +66,14 @@ module.exports.routes = {
   'GET /api/perm/list':         {action: 'perm/list'},
   'POST /api/perm/create':      {action: 'perm/create'},
 
+  //SETTING
+  'GET /api/setting/list':      {action: 'setting/list'},
+  'POST /api/setting/create':   {action: 'setting/create'},
+  'PATCH /api/setting/update':  {action: 'setting/update'},
+  'DELETE /api/setting/delete': {action: 'setting/delete'},
+  
+  'GET /api/setting/fetch': {action: 'setting/fetch'},
+  
   'GET /*': { 
     skipAssets: true,
     fn: function(req, res) {
