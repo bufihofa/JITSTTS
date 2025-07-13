@@ -63,10 +63,15 @@ module.exports = {
     let criteria = {};
 
     if (inputs.searchTerm) {
-      criteria.or = [
-        { name: { contains: inputs.searchTerm } },
-        { tag: { contains: inputs.searchTerm } }
-      ];
+      if(process.env.DB_TYPE === 'mongodb') {
+        criteria.$text = { $search: inputs.searchTerm };
+      } 
+      else {
+        criteria.or = [
+          { name: { contains: inputs.searchTerm } },
+          { tag: { contains: inputs.searchTerm } }
+        ];
+      }
     }
 
     if (inputs.minPrice !== undefined || inputs.maxPrice !== undefined) {
