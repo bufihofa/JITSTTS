@@ -2,8 +2,8 @@ import axios from "axios";
 import storage from "../utils/storage";
 
 
-//const baseURL = "";
-const baseURL = "http://localhost:1337/"; 
+const baseURL = "";
+//const baseURL = "http://localhost:1337/"; 
 export const axiosInstance = axios.create({
     baseURL: baseURL,
     headers: {

@@ -2,7 +2,7 @@ module.exports = {
     friendlyName: 'Fetch Settings',
     fn: async function (inputs, exits) {
         try {
-            const settings = await Setting.find();
+            const settings = await Setting.find({show: true});
 
             const perms = this.req.perms || [];
             return exits.success({ message: 'Settings retrieved successfully.', settings, perms });

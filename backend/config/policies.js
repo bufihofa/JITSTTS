@@ -9,27 +9,23 @@
  */
 const requirePerm = require('../api/policies/requirePerm');
 const defaultPermissions = [
-  {name: 'Product - *', action: 'product.*', tag: 'default'},
-  {name: 'Product - Data', action: 'product.data'},
+  {name: 'Product - *', action: 'product.*'},
   {name: 'Product - Create', action: 'product.create'},
   {name: 'Product - Update', action: 'product.update'},
   {name: 'Product - Delete', action: 'product.delete'},
-  {name: 'Product - View all', action: 'product.list'},
   {name: 'Product - Search', action: 'product.search'},
   
-  {name: 'User - View all', action: 'user.list'},
+  {name: 'User - Search', action: 'user.search'},
   
-  {name: 'Role - View all', action: 'role.list'},
-  {name: 'Role - Create', action: 'role.create'},
-  {name: 'Role - Update', action: 'role.update'},
-  {name: 'Role - Set Role', action: 'role.setrole'},
-  
-  {name: 'Permission - View all', action: 'perm.list'},
-  {name: 'Permission - Create', action: 'perm.create'}
+  {name: 'Role - *', action: 'role.*'},
+  {name: 'Setting - *', action: 'setting.*'},
+
+  {name: 'Setting - Fetch', action: 'setting.fetch'},
 ]
 const defaultRoles = [
-  {name: 'Nhân viên', desc: 'Người nghèo'},
-  {name: 'Quản lí', desc: 'Người hơi nghèo'}
+  
+  {name: 'Quản lí', desc: 'Người hơi nghèo'},
+  {name: 'Nhân viên', desc: 'Người nghèo'}
 ]
 
 module.exports.defaultRoles = defaultRoles;
@@ -37,7 +33,6 @@ module.exports.defaultPermissions = defaultPermissions;
 module.exports.policies = {
 
   '*': true,
-  'product/data': ['isAuthenticated', requirePerm(['product.data'])],
   
   'product/create': ['isAuthenticated', requirePerm(['product.create'])],
   'product/create-one': ['isAuthenticated', requirePerm(['product.create'])],
@@ -48,23 +43,25 @@ module.exports.policies = {
   'product/delete': ['isAuthenticated', requirePerm(['product.delete'])],
   'product/delete-one': ['isAuthenticated', requirePerm(['product.delete'])],
 
-  'product/list': ['isAuthenticated', requirePerm(['product.list'])],
   'product/search': ['isAuthenticated', requirePerm(['product.search'])],
   
   'user/list': ['isAuthenticated', requirePerm(['user.list'])],
   'user/search': ['isAuthenticated', requirePerm(['user.search'])],
   
-  'role/list': ['isAuthenticated', requirePerm(['role.list'])],
-  'role/create': ['isAuthenticated', requirePerm(['role.create'])],
-  'role/update': ['isAuthenticated', requirePerm(['role.update'])],
-  'role/setrole': ['isAuthenticated', requirePerm(['role.setrole'])],
-  'perm/list': ['isAuthenticated', requirePerm(['perm.list'])],
-  'perm/create': ['isAuthenticated', requirePerm(['perm.create'])],
 
-  'setting/list': ['isAuthenticated', requirePerm(['setting.list'])],
-  'setting/create': ['isAuthenticated', requirePerm(['setting.create'])],
-  'setting/update': ['isAuthenticated', requirePerm(['setting.update'])],
-  'setting/delete': ['isAuthenticated', requirePerm(['setting.delete'])],
+
+  'role/list': ['isAuthenticated', requirePerm(['role.admin'])],
+  'role/create': ['isAuthenticated', requirePerm(['role.admin'])],
+  'role/update': ['isAuthenticated', requirePerm(['role.admin'])],
+  'role/setrole': ['isAuthenticated', requirePerm(['role.admin'])],
+
+  'perm/list': ['isAuthenticated', requirePerm(['role.admin'])],
+  'perm/create': ['isAuthenticated', requirePerm(['role.admin'])],
+
+  'setting/list': ['isAuthenticated', requirePerm(['setting.admin'])],
+  'setting/create': ['isAuthenticated', requirePerm(['setting.admin'])],
+  'setting/update': ['isAuthenticated', requirePerm(['setting.admin'])],
+  'setting/delete': ['isAuthenticated', requirePerm(['setting.admin'])],
   
   'setting/fetch': ['isAuthenticated', requirePerm(['setting.fetch'])],
 };

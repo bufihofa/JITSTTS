@@ -8,7 +8,7 @@ module.exports ={
         try {
             
             const newSetting = await Setting.create({
-                isShow: inputs.show,
+                show: inputs.show,
                 config: inputs.config
             }).fetch();
 

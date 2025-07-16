@@ -1,6 +1,4 @@
 import {  useState } from "react";
-import './Manage.css';
-
 
 import DynamicTable from "./DynamicTable";
 import './DynamicPage.css';
@@ -11,6 +9,7 @@ import SearchBar from "../../component/common/SearchBar";
 import Button from "../../component/common/Button";
 import { TbFilterSearch } from "react-icons/tb";
 import { DynamicAPI } from "./DynamicAPI";
+import { useSetting } from "../../context/useSetting";
 
 export const productPageConfig: PageConfig = {
 
@@ -22,7 +21,7 @@ export const productPageConfig: PageConfig = {
         initialSortBy: "name",
         initialSortDirection: "asc",
         columns: [
-            { key: "name", label: "Name", sortable: true, width: 55, type: "text", isShow: true },
+            { key: "name", label: "Name", sortable: false, width: 55, type: "text", isShow: true },
             { key: "price", label: "Price", sortable: true, width: 12, type: "number", isShow: true },
             { key: "quantity", label: "Quantity", sortable: true, width: 12, type: "number", isShow: true },
             { key: "tag", label: "Tag", sortable: true, width: 25, type: "text", isShow: true }
@@ -42,23 +41,23 @@ export const productPageConfig: PageConfig = {
     
     action: {
         mainButton: {
-            key: "addProduct",
             permission: "product.create",
             label: "Add Product",
             isShow: true,
             openForm: "addProductForm",
-            api: {
-                method: "POST",
-                url: "/api/product",
-                refresh: true 
-            }
+            
         },
         tableButtons: [
+            
             {
-                key: "deleteProduct",
+                permission: "product.update",
+                icon: "edit",
+                isShow: true,
+                openForm: "editProductForm",
+            },
+            {
                 permission: "product.delete",
-                label: "Delete",
-                icon: "DeleteIcon",
+                icon: "del",
                 isShow: true,
                 api: {
                     method: "DELETE",
@@ -66,15 +65,6 @@ export const productPageConfig: PageConfig = {
                     suffix: "id",
                     refresh: true 
                 }
-            },
-            {
-                key: "editProduct",
-                permission: "product.update",
-                label: "Edit",
-                icon: "EditIcon",
-                isShow: true,
-                
-                openForm: "editProductForm",
             }
         ]
     },
@@ -111,30 +101,19 @@ export const productPageConfig: PageConfig = {
                 suffix: "id",
                 refresh: true 
             }
-        },
-        {
-            key: "deleteProductForm",
-            name: "Delete Product",
-            fields: [
-                { key: "id", label: "ID", type: "text", disabled: true},
-                { key: "name", label: "Name", type: "text", disabled: true }
-            ],
-            api: {
-                method: "DELETE",
-                url: "/api/product",
-                suffix: "id",
-                refresh: true 
-            }
         }
 
     ]
 
 }
 
-
-const DynamicPage: React.FC = () => {
+interface DynamicPageProps {
+    pageConfig?: PageConfig;
+}
+const DynamicPage: React.FC<DynamicPageProps> = ({pageConfig}) => {
+  const { checkPerm } = useSetting();
   const [searchQuery, setSearchQuery] = useState("");
-  const [config, setConfig] = useState<PageConfig>(productPageConfig);
+  const [config] = useState<PageConfig>(pageConfig || productPageConfig);
 
   const [formConfig, setFormConfig] = useState<FormConfig>();
   const [isFormOpen, setFormOpen] = useState(false);
@@ -143,7 +122,6 @@ const DynamicPage: React.FC = () => {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const onButtonClicked = () => {
-    console.log("onButtonClickeddddddddddddddddddddddddddddddddd");
     const form = config.form.find(f => f.key === config.action.mainButton?.openForm);
     if (!form) {
     console.error(`Form with key ${config.action.mainButton?.openForm} not found`);
@@ -174,7 +152,7 @@ const DynamicPage: React.FC = () => {
         return;
     }
     await DynamicAPI(
-        api.method, 
+        api.method || "POST", 
         `${api.url}${api.suffix ? `/${formValues[api.suffix]}` : ''}`, 
         api.params, 
         formValues
@@ -186,6 +164,7 @@ const DynamicPage: React.FC = () => {
   }
     console.log("DynamicPage render");
   return (
+    checkPerm(config?.permission) &&(
     <div className="dynamic-page">
         {
             isFormOpen &&
@@ -218,10 +197,11 @@ const DynamicPage: React.FC = () => {
                 />
                 <button className="header-button filter" onClick={() => {}}><TbFilterSearch /></button>
                 
+                {(checkPerm(config?.action.mainButton?.permission) &&
                 <Button
                     onAddButton={onButtonClicked}
-                    text="Add Product"
-                />
+                    text={config?.action.mainButton?.label || "Button"}
+                />)}
                 </div>
             </div>
         </div>
@@ -235,7 +215,7 @@ const DynamicPage: React.FC = () => {
             refreshKey={refreshKey}
         />
 
-    </div>
+    </div>)
   )
 }
 

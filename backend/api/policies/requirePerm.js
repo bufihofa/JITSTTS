@@ -5,25 +5,33 @@ module.exports = function(requiredPerms) {
   }
 
   return async function(req, res, proceed) {
-    if(!requiredPerms || requiredPerms.length === 0 || req.user.isAdmin) {
+    if(!requiredPerms || requiredPerms.length === 0) {
       return proceed();
     }
 
-    console.log('all cached permissions:', global.cache);
-    //console.log("action: ", req.options.action);
-    //console.log("requiredPerms: ", requiredPerms);
+    const cacheKey = `user-${req.user.id}`;
+
+    //admin dc bypass
+    if(req.user.isAdmin){
+      global.cache.set(cacheKey, ['*']);
+      req.perms = ['*'];
+      return proceed();
+    }
+
 
     if (!req.user) {
       return res.forbidden('You are not logged in.');
     }
-    const cacheKey = `user-${req.user.id}`;
 
+    //neu cache da co
     if (global.cache.has(cacheKey)) {
       const cachedPerms = global.cache.get(cacheKey);
 
       req.perms = cachedPerms;
       console.log('Using cached permissions for user:', req.user.username);
     }
+
+    //neu chua cache
     else { 
       const [user, role] = await Promise.all([
           await User.findOne({ username: req.user.username }).populate('roles'),
@@ -32,16 +40,13 @@ module.exports = function(requiredPerms) {
 
       const roleIds = user.roles.map(role => role.id);
       const userRoles = role.filter(role => roleIds.includes(role.id));
-      const perms = userRoles.flatMap(role => role.perms).flatMap(perm => perm.action);
+      const perms = [...new Set(userRoles.flatMap(role => role.perms).flatMap(perm => perm.action))];
       
       global.cache.set(cacheKey, perms);
       req.perms = perms;
-      console.log('Fetched permissions for user:', req.user.username);
     }
     
-    console.log('User permissions:', req.perms);
 
-    console.log('Required permissions:', requiredPerms);
 
     const hasPermission = requiredPerms.every(requiredPerm => {
       if (req.perms.includes(requiredPerm)) {

@@ -65,7 +65,7 @@ module.exports = {
                 return exits.badRequest({ message: 'Đăng ký không thành công.' });
             }
             const jwtToken = jwt.sign(
-                { username: user.username, email: user.email, role: user.role },
+                { username: user.username, email: user.email, isAdmin: user.isAdmin, id: user.id },
                 process.env.JWT_SECRET,
                 { expiresIn: '7d' }
             );

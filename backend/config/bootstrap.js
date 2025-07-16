@@ -10,7 +10,10 @@
  */
 
 module.exports.bootstrap = async function(done) {
+  // Permissions cache
   global.cache = new Map();
+
+  // Init permissions and roles
   const permCount = await Perm.count();
   const defaultPermissions  = require('./policies').defaultPermissions;
   const defaultRoles = require('./policies').defaultRoles;
@@ -19,7 +22,6 @@ module.exports.bootstrap = async function(done) {
     sails.log.info('Creating default permissions...');
     
     try {
-      // Create all permissions from the defaultPermissions array
       console.log(defaultPermissions);
       await Perm.createEach(defaultPermissions);
       sails.log.info(`Successfully created ${defaultPermissions.length} default permissions`);

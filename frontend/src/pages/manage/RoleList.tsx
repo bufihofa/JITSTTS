@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { axiosInstance } from "../../api/axiosInstance";
 import CMSInput from "../../component/common/Input";
 import "./RoleList.css";
-import { MdEdit, MdDelete } from "react-icons/md";
+import {  MdDelete } from "react-icons/md";
 
-import { FaPlus, FaUsers, FaCog, FaKey, FaShieldAlt, FaSave, FaExclamationTriangle } from "react-icons/fa";
+import { FaKey, FaShieldAlt } from "react-icons/fa";
 import Button from "../../component/common/Button";
 
 interface Role {

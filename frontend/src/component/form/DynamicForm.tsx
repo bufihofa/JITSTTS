@@ -1,5 +1,5 @@
 import { IoCloseCircleSharp } from "react-icons/io5";
-import type { FormConfig, PageConfig } from "../../types/PageConfig";
+import type { FormConfig } from "../../types/PageConfig";
 import CMSInput from "../common/Input";
 import React, { useEffect, useState } from "react";
 
@@ -59,8 +59,9 @@ const DynamicForm: React.FC<DynamicFormProps> = ({formConfig, onCloseForm, handl
                             value={formValues[field?.key]}
                             type={field?.type}
                             disabled={field?.disabled}
+                            required={field?.required}
                             onChange={val => onChange(field?.key, val)}
-                        />
+                        />      
                     ))}
                     <button className="submit-btn" type="submit">Xác nhận</button>
                 </form>

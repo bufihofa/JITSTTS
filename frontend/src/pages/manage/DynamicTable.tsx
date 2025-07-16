@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { axiosInstance } from "../../api/axiosInstance";
-import type { FormConfig, PageConfig } from "../../types/PageConfig";
-import { LuArrowDown10, LuArrowDownZA, LuArrowUp01, LuArrowUpAZ, LuArrowUpDown } from "react-icons/lu";
-import { GoCopy } from "react-icons/go";
-import { MdDelete, MdEdit } from "react-icons/md";
+import type { ButtonConfig, FormConfig, PageConfig } from "../../types/PageConfig";
+import { LuArrowDownZA, LuArrowUpAZ, LuArrowUpDown } from "react-icons/lu";
+import { MdDelete, MdEdit, MdAdd, MdCopyAll, MdCall, MdCheckBoxOutlineBlank   } from "react-icons/md";
 
 import './DynamicTable.css';
 
 import Pagination from "../../component/pagination/Pagination";
 import { DynamicAPI } from "./DynamicAPI";
-import DynamicForm from "../../component/form/DynamicForm";
+import { useSetting } from "../../context/useSetting";
 interface DynamicTableProps {
     pageConfig: PageConfig;
     searchQuery?: string;
@@ -19,7 +18,7 @@ interface DynamicTableProps {
     refreshKey?: number;
 }
 
-const searchData = async (
+export const searchData = async (
     method: string, 
     url: string, 
     params?: {
@@ -31,6 +30,7 @@ const searchData = async (
     }) => 
 {
     try {
+        console.log(method);
         const response = await axiosInstance.get(url, {
             params
         });
@@ -50,7 +50,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
     const [sortBy, setSortBy] = useState<string>(pageConfig.table.initialSortBy);
     const [sortDirection, setSortDirection] = useState(pageConfig.table.initialSortDirection);
 
-    
+    const {checkPerm} = useSetting();
     const shouldFetch = useRef(true);
 
     const [pagination, setPagination] = useState({
@@ -62,6 +62,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
         hasPrevious: false,
       });
 
+    const config = pageConfig.table.columns;
+    const buttons = pageConfig.action.tableButtons || [];
+    const forms = pageConfig.form || [];
 
     const fetchTableData = async (page: number) => {
         setPagination(prev => ({
@@ -85,7 +88,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
             );
             console.log(response);
 
-            setDataList(response.products);
+            setDataList(response.data);
 
             if(response.pagination.totalPages < pagination.page) {
                 setPagination(prev => ({
@@ -157,7 +160,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
 
     }
     
-    const dynamicTD = (data: any, key: string, type?: string) => {
+    const dynamicTD = (data: any, key: string) => {
         return <td>{data[key]    || "N/A   "}</td>;
     }
 
@@ -170,33 +173,50 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
         )
     }, [pagination, dataList]);
   
-    const config = pageConfig.table.columns;
-    const buttons = pageConfig.action.tableButtons || [];
-    const forms = pageConfig.form || [];
     
-    const dynamicButtonAPI = (button: any, data: any) => {
+    const renderButton = (button: string) => {
+        if (button === 'del') {
+            return <MdDelete />;
+        }
+        if (button === 'edit') {
+            return <MdEdit />;
+        }
+        if (button === 'add') {
+            return <MdAdd />;
+        }
+        if (button === 'copy') {
+            return <MdCopyAll />;
+        }
+        if (button === 'call') {
+            return <MdCall />;
+        }
+
+        return <MdCheckBoxOutlineBlank />; // Default case
+
+    }
+    const dynamicButtonAPI = (button: ButtonConfig, data: any) => {
         return (
             button.isShow && (
                 <button 
-                    key={button.key} 
                     className="dynamic-table-action" 
                     onClick={async () => {
                         await DynamicAPI(
-                            button.api.method, 
-                            `${button.api.url}${button.api.suffix ? `/${data[button.api.suffix]}` : ''}`
+                            button?.api?.method || 'GET', 
+                            `${button?.api?.url}${button?.api?.suffix ? `/${data[button.api.suffix]}` : ''}`
                         );
-                        if(button.api.refresh) {
+                        if(button?.api?.refresh) {
                             fetchTableData(pagination.page);
                         }
                     }}
                 >
-                    {<MdDelete /> }
+                    {renderButton(button.icon || "none")}
                 </button>
                 
             )
         )
     }
-    const dynamicButtonOpenForm = (button: any, data: any) => {
+    const dynamicButtonOpenForm = (button: ButtonConfig, data: any) => {
+        console.log(button.openForm && button.openForm != "");
         const form = forms.find(f => f.key === button.openForm);
         if (!form) {
             console.error(`Form with key ${button.openForm} not found`);
@@ -205,7 +225,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
         return (
             button.isShow && (
                 <button 
-                    key={button.key} 
                     className="dynamic-table-action" 
                     onClick={() => {
                         if (form.initData && setInitData) {
@@ -216,7 +235,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
                         setFormOpen && setFormOpen(true);
                     }}
                 >
-                    {<MdEdit />}
+                    {renderButton(button.icon || "none")}
                 </button>
             )
         )
@@ -250,10 +269,10 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
                     <td>
                     <div className="dynamic-table-actions">
                         {buttons?.map((button) => (
-                            button.isShow && (
-                                button.api ? 
-                                    dynamicButtonAPI(button, data) :
-                                    dynamicButtonOpenForm(button, data)
+                            button.isShow && checkPerm(button.permission) && (
+                                (button.openForm && button.openForm != "") ? 
+                                    dynamicButtonOpenForm(button, data) :
+                                    dynamicButtonAPI(button, data)
                             )
                         ))}
                     </div>

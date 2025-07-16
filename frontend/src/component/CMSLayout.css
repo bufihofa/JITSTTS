@@ -154,6 +154,7 @@ body {
     padding: 0;
     margin: 0;
     list-style: none;
+    overflow-y: auto;
 }
 
 .sidebar-menu:hover .sidebar-link:not(:hover) {
@@ -193,6 +194,22 @@ body {
 
 .sidebar-icon{
     margin-right: 15px;
+}
+.sidebar-item{
+    animation: fadeIn 1.0s ease-in-out;
+}
+
+
+.sidebar-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
 }
 .sidebar-text {
     font-size: 1rem;

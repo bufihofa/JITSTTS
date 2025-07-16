@@ -20,7 +20,6 @@ export const useGoogleAuth = () => {
           response.data.user.role, 
           response.data.user.username
         );
-        
         navigate('/home');
       } catch (error) {
         console.error("Google login error:", error);

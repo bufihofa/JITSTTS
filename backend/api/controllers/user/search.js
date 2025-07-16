@@ -40,12 +40,14 @@ module.exports = {
     let page = Math.max(1, inputs.page);
     let limit = inputs.limit;
     let skip = (page - 1) * limit;
-
+    if (inputs.sortBy !== 'username' && inputs.sortBy !== 'email' && inputs.sortBy !== 'isAdmin') {
+      inputs.sortBy = 'username'; 
+    }
     let criteria = {};
 
     if (inputs.searchTerm) {
         criteria.or = [
-          { name: { contains: inputs.searchTerm } }
+          { username: { contains: inputs.searchTerm } }
         ];
     }
 
@@ -70,7 +72,7 @@ module.exports = {
           .skip(skip)
           .limit(limit)
           .sort([
-            { [inputs.sortBy]: inputs.sortDirection },
+            { [inputs.sortBy || "id"]: inputs.sortDirection },
             { id: 'ASC' }
           ]);
       }
@@ -80,9 +82,8 @@ module.exports = {
     const hasPrevious = page > 1;
 
     return exits.success({
-      message: 'Find Product OK',
-      test: this.req.permsList,
-      products,
+      message: 'Find OK',
+      data: products,
       pagination: {
         page,
         limit,

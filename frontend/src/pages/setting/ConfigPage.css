@@ -53,3 +53,114 @@
   overflow: auto;
   gap: 5%;
 }
+
+
+.table-tab-container{
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  overflow: auto;
+  width: 100%;
+}
+.table-config {
+  margin: 4% 2% 1% 2%;
+  width: 80%;
+}
+.config-table {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 30px;
+}
+.config-table-sort {
+    display: flex;
+    flex-direction: row;
+}
+.config-table-sort-column {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+.config-table-sort-direction {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.config-table-api {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.config-table-column{
+    box-shadow: 0px 2px 5px var(--shadow-primary);
+    border: 2px solid var(--shadow-primary);
+    border-radius: 10px;
+    margin: 0px 0px 30px 0px;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+
+}
+.config-table-add-column{
+    display: flex;
+    margin-top: 20px;
+}
+.config-table-delete-column{
+    display: flex;
+    align-items: center;
+}
+.config-table-delete-button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--delete-button);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border-radius: 50%;
+    padding: 0px;
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+    background-color: rgba(247, 127, 127, 0.1);
+}
+.config-table-delete-button:hover {
+    color: var(--delete-button-hover);
+    background-color: rgba(249, 97, 97, 0.3);
+}
+.column-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.config-table-input-column {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.config-form-init {
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+.config-form-field-column {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--shadow-primary);
+    border-radius: 10px;
+    margin: 0px 0px 30px 0px;
+    padding: 10px 20px;
+}
+.config-form-field-type{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+}
+.type-select{
+    width: 50%;
+}

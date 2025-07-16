@@ -51,6 +51,9 @@ module.exports = {
       ];
     }
 
+    if (inputs.sortBy !== 'name' && inputs.sortBy !== 'price' && inputs.sortBy !== 'quantity' && inputs.sortBy !== 'tag') {
+      inputs.sortBy = 'name';
+    }
     if (inputs.minPrice !== undefined || inputs.maxPrice !== undefined) {
       criteria.price = {};
       if (inputs.minPrice !== undefined) {
@@ -77,7 +80,7 @@ module.exports = {
             .skip(skip)
             .limit(limit)
             .sort([
-              { [inputs.sortBy]: inputs.sortDirection },
+              { [inputs.sortBy || "id"]: inputs.sortDirection },
               { id: 'ASC' }
             ])
     ]);
@@ -100,9 +103,8 @@ module.exports = {
     const hasPrevious = page > 1;
 
     return exits.success({
-      message: 'Find Product OK',
-      test: this.req.permsList,
-      products,
+      message: 'Find OK',
+      data: products,
       pagination: {
         page,
         limit,

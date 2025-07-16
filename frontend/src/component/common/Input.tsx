@@ -5,9 +5,10 @@ interface CMSInputProps{
     type?: string;
     value: any;
     disabled?: boolean;
+    required?: boolean;
     onChange?: (value: any) => void;
 }
-const CMSInput: React.FC<CMSInputProps> = ({label, placeholder, type, value, onChange, disabled}) => {
+const CMSInput: React.FC<CMSInputProps> = ({label, placeholder, type, value, onChange, disabled, required}) => {
     return(
         <div className="input-container">
             <label className="input-label">{label}</label>
@@ -19,6 +20,7 @@ const CMSInput: React.FC<CMSInputProps> = ({label, placeholder, type, value, onC
                 placeholder={placeholder || ""}
                 onChange={(e) => onChange && onChange(e.target.value)} 
                 disabled={disabled}
+                required={required}
             />
         </div>
     )
