@@ -64,7 +64,7 @@ const Sidebar = () => {
                     </div>
                 )}
                 
-                {checkPerm("seting.admin") && (
+                {checkPerm("setting.admin") && (
                     <div className="sidebar-item">
                         <NavLink to="/config" className="sidebar-link">
                             
