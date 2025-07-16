@@ -47,7 +47,7 @@ const Sidebar = () => {
                 
 
 
-                {checkPerm("admin") && (
+                {checkPerm("role.admin") && (
                     <div className="sidebar-item">
                         <NavLink to="/role" className="sidebar-link">
                             
@@ -55,7 +55,7 @@ const Sidebar = () => {
                         </NavLink>
                     </div>
                 )}
-                {checkPerm("admin") && (
+                {checkPerm("role.admin") && (
                     <div className="sidebar-item">
                         <NavLink to="/permissions" className="sidebar-link">
                             
@@ -64,7 +64,7 @@ const Sidebar = () => {
                     </div>
                 )}
                 
-                {checkPerm("admin") && (
+                {checkPerm("seting.admin") && (
                     <div className="sidebar-item">
                         <NavLink to="/config" className="sidebar-link">
                             
