@@ -18,6 +18,9 @@ module.exports = {
     }
   },
   fn: async function(inputs, exits) {
+    if(!inputs.id) {
+      return exits.notFound({ message: 'ID sản phẩm là bắt buộc.' });
+    }
     const productId = inputs.id;
     
     const product = await Product.findOne({ id: productId });

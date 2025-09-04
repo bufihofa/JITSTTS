@@ -17,6 +17,7 @@ module.exports = async function (req, res, proceed) {
     if (err) {
       return res.status(401).json({ message: 'Invalid token.' });
     }
+    
     req.user = {
       username: payload.username,
       email: payload.email,

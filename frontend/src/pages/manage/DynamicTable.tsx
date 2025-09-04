@@ -161,7 +161,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
     }
     
     const dynamicTD = (data: any, key: string) => {
+
         return <td>{data[key]    || "N/A   "}</td>;
+        
     }
 
     const paginationControls = useMemo(() => {

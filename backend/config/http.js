@@ -51,7 +51,7 @@ module.exports.http = {
         const time = diff[0] * 1000 + diff[1] / 1000000; // Convert to milliseconds
         
         // Log the request method, URL, and time taken
-        console.log(`${req.method} ${req.originalUrl || req.url} - ${time.toFixed(2)}ms`);
+        //console.log(`${req.method} ${req.originalUrl || req.url} - ${time.toFixed(2)}ms`);
       });
       
       // Continue to the next middleware

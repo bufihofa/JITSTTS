@@ -24,25 +24,26 @@ module.exports = {
     const { username, password } = inputs;
 
     if (!username || !password) {
-      return exits.success({ message: 'Username và password là bắt buộc.' });
+      return exits.badRequest({ message: 'Username và password là bắt buộc.' });
     }
     const user = await User.findOne({ username });
     if (!user) {
       return exits.badRequest({ message: 'Không tồn tại username.' });
     }
-    bcrypt.compare(password, user.password, (err, result) => {
-      if (result) {
-        const token = jwt.sign(
-          { username: user.username, email: user.email, isAdmin: user.isAdmin, id: user.id },
-          process.env.JWT_SECRET, 
-          { expiresIn: '7d' }
-        );
-        return exits.success({ user: { username: user.username, id: user.id, isAdmin: user.isAdmin}, token });
 
-      } else {
-        return exits.badRequest({ message: 'Mật khẩu không đúng.' });
-      }
-    });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return exits.badRequest({ message: 'Đăng nhập không thành công.' });
+    }
+
+    const token = jwt.sign(
+      { username: user.username, email: user.email, isAdmin: user.isAdmin, id: user.id },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+
+    return exits.success({ user: { username: user.username, id: user.id, isAdmin: user.isAdmin }, token });
   }
 
 };

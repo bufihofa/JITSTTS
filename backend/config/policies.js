@@ -34,31 +34,31 @@ module.exports.policies = {
 
   '*': true,
   
-  'product/create': ['isAuthenticated', requirePerm(['product.create'])],
+  'product/create':     ['isAuthenticated', requirePerm(['product.create'])],
   'product/create-one': ['isAuthenticated', requirePerm(['product.create'])],
 
-  'product/update': ['isAuthenticated', requirePerm(['product.update'])],
+  'product/update':     ['isAuthenticated', requirePerm(['product.update'])],
   'product/update-one': ['isAuthenticated', requirePerm(['product.update'])],
 
-  'product/delete': ['isAuthenticated', requirePerm(['product.delete'])],
+  'product/delete':     ['isAuthenticated', requirePerm(['product.delete'])],
   'product/delete-one': ['isAuthenticated', requirePerm(['product.delete'])],
 
-  'product/search': ['isAuthenticated', requirePerm(['product.search'])],
+  'product/search':     ['isAuthenticated', requirePerm(['product.search'])],
   
-  'user/list': ['isAuthenticated', requirePerm(['user.list'])],
+  'user/list':   ['isAuthenticated', requirePerm(['user.list'])],
   'user/search': ['isAuthenticated', requirePerm(['user.search'])],
   
 
-
-  'role/list': ['isAuthenticated', requirePerm(['role.admin'])],
-  'role/create': ['isAuthenticated', requirePerm(['role.admin'])],
-  'role/update': ['isAuthenticated', requirePerm(['role.admin'])],
+  //'role/*':     ['isAuthenticated', requirePerm(['role.admin'])],
+  'role/list':    ['isAuthenticated', requirePerm(['role.admin'])],
+  'role/create':  ['isAuthenticated', requirePerm(['role.admin'])],
+  'role/update':  ['isAuthenticated', requirePerm(['role.admin'])],
   'role/setrole': ['isAuthenticated', requirePerm(['role.admin'])],
+  
+  'perm/list':    ['isAuthenticated', requirePerm(['role.admin'])],
+  'perm/create':  ['isAuthenticated', requirePerm(['role.admin'])],
 
-  'perm/list': ['isAuthenticated', requirePerm(['role.admin'])],
-  'perm/create': ['isAuthenticated', requirePerm(['role.admin'])],
-
-  'setting/list': ['isAuthenticated', requirePerm(['setting.admin'])],
+  'setting/list':   ['isAuthenticated', requirePerm(['setting.admin'])],
   'setting/create': ['isAuthenticated', requirePerm(['setting.admin'])],
   'setting/update': ['isAuthenticated', requirePerm(['setting.admin'])],
   'setting/delete': ['isAuthenticated', requirePerm(['setting.admin'])],

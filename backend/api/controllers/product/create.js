@@ -55,7 +55,6 @@ module.exports = {
       .catch(err => {
         console.log('Lỗi:', err);
       });
-      console.log(content);
     }
 
     return exits.success({ message: 'Create Product OK', products: done });

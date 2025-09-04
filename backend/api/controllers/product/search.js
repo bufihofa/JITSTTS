@@ -26,8 +26,8 @@ module.exports = {
     sortDirection: {
       description: 'Sort direction (asc or desc)',
       type: 'string',
-      isIn: ['asc', 'desc'],
-      defaultsTo: 'asc'
+      isIn: ['ASC', 'DESC', 'asc', 'desc'],
+      defaultsTo: 'ASC'
     }
   },
 
@@ -37,8 +37,6 @@ module.exports = {
     },
   },
   fn: async function (inputs, exits) {
-    const user = this.req.user;
-    console.log(inputs);
     let page = Math.max(1, inputs.page);
     let limit = inputs.limit;
     let skip = (page - 1) * limit;
@@ -50,10 +48,12 @@ module.exports = {
       { tag: { 'like': `%${inputs.searchTerm}%` } }
       ];
     }
-
     if (inputs.sortBy !== 'name' && inputs.sortBy !== 'price' && inputs.sortBy !== 'quantity' && inputs.sortBy !== 'tag') {
       inputs.sortBy = 'name';
     }
+
+    const sortDirection = (typeof inputs.sortDirection === 'string' ? inputs.sortDirection.toUpperCase() : 'ASC') === 'DESC' ? 'DESC' : 'ASC';
+
     if (inputs.minPrice !== undefined || inputs.maxPrice !== undefined) {
       criteria.price = {};
       if (inputs.minPrice !== undefined) {
@@ -73,14 +73,13 @@ module.exports = {
         criteria.quantity['<='] = inputs.maxQuantity;
       }
     }
-    const now = new Date();
     let [totalCount, products] = await Promise.all([
         Product.count(criteria),
         Product.find(criteria)
             .skip(skip)
             .limit(limit)
             .sort([
-              { [inputs.sortBy || "id"]: inputs.sortDirection },
+              { [inputs.sortBy || "id"]: sortDirection },
               { id: 'ASC' }
             ])
     ]);
@@ -93,15 +92,13 @@ module.exports = {
           .skip(skip)
           .limit(limit)
           .sort([
-            { [inputs.sortBy]: inputs.sortDirection },
+            { [inputs.sortBy]: sortDirection },
             { id: 'ASC' }
           ]);
       }
     }
-    console.log("Time to query DB: ", new Date() - now, "ms");
     const hasMore = page < totalPages;
     const hasPrevious = page > 1;
-
     return exits.success({
       message: 'Find OK',
       data: products,

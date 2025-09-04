@@ -17,7 +17,7 @@ module.exports = {
 
   
   beforeCreate: function (valuesToSet, proceed) {
-    bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.genSalt(1, (err, salt) => {
       if (err) return proceed(err);
       bcrypt.hash(valuesToSet.password, salt, (err, hash) => {
         if (err) return proceed(err);

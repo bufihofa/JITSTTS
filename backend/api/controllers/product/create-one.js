@@ -39,7 +39,9 @@ module.exports = {
   },
 
   fn: async function (inputs, exits) {
-
+    if(!inputs.name) {
+      return exits.badRequest({ message: 'Tên sản phẩm là bắt buộc.' });
+    }
     const done = await Product.create({
       name: inputs.name,
       price: inputs.price,
@@ -59,7 +61,6 @@ module.exports = {
       .catch(err => {
         console.log('Lỗi:', err);
       });
-      console.log(content);
     }
 
     return exits.success({ message: 'Create Product OK', products: done });

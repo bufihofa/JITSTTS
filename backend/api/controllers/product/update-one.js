@@ -58,7 +58,7 @@ module.exports = {
       price: product.price,
       tag: product.tag,
       quantity: product.quantity
-    }).fetch();
+    });
 
     content = `Đã cập nhật sản phẩm "${done.name}".`;
 

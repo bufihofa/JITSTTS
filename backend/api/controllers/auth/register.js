@@ -24,7 +24,7 @@ module.exports = {
     const { username, email, password } = inputs;
 
     if (!username || !email || !password) {
-      return exits.success({ message: 'Không được bỏ trống thông tin.' });
+      return exits.badRequest({ message: 'Không được bỏ trống thông tin.' });
     }
 
     const existingUser = await User.findOne().where({ 

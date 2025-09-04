@@ -22,7 +22,7 @@ module.exports.bootstrap = async function(done) {
     sails.log.info('Creating default permissions...');
     
     try {
-      console.log(defaultPermissions);
+      //console.log(defaultPermissions);
       await Perm.createEach(defaultPermissions);
       sails.log.info(`Successfully created ${defaultPermissions.length} default permissions`);
       

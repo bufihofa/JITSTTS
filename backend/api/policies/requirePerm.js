@@ -5,10 +5,11 @@ module.exports = function(requiredPerms) {
   }
 
   return async function(req, res, proceed) {
+    //console.log('action:', req.options.action);
     if(!requiredPerms || requiredPerms.length === 0) {
       return proceed();
     }
-
+    
     const cacheKey = `user-${req.user.id}`;
 
     //admin dc bypass
