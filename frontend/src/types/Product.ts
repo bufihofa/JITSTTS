@@ -1,7 +1,8 @@
 export interface Product {
     id: number;
-    name: string;
-    price: number;
-    quantity: number;
-    tag: string;
+    name?: string;
+    price?: number;
+    quantity?: number;
+    tag?: string;
+    [key: string]: unknown;
 }

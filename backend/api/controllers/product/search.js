@@ -1,6 +1,8 @@
+const { formatRecords } = require('./utils');
+
 module.exports = {
   friendlyName: 'Search Product',
-  
+
   inputs: {
     page: {
       description: 'Page number for pagination',
@@ -12,14 +14,30 @@ module.exports = {
       type: 'number',
       defaultsTo: 10
     },
+    minPrice: {
+      description: 'Minimum price filter',
+      type: 'number'
+    },
+    maxPrice: {
+      description: 'Maximum price filter',
+      type: 'number'
+    },
+    minQuantity: {
+      description: 'Minimum quantity filter',
+      type: 'number'
+    },
+    maxQuantity: {
+      description: 'Maximum quantity filter',
+      type: 'number'
+    },
     searchTerm: {
-      description: 'Term to search in product name or tag',
+      description: 'Term to search in product data',
       type: 'string',
       defaultsTo: ''
     },
-    
+
     sortBy: {
-      description: 'Field to sort by (name, price, quantity, tag)',
+      description: 'Field to sort by',
       type: 'string',
       defaultsTo: 'name'
     },
@@ -37,22 +55,16 @@ module.exports = {
     },
   },
   fn: async function (inputs, exits) {
-    let page = Math.max(1, inputs.page);
-    let limit = inputs.limit;
-    let skip = (page - 1) * limit;
-
-    let criteria = {};
-    if (inputs.searchTerm) {
-      criteria.or = [
-      { name: { 'like': `%${inputs.searchTerm}%` } },
-      { tag: { 'like': `%${inputs.searchTerm}%` } }
-      ];
-    }
-    if (inputs.sortBy !== 'name' && inputs.sortBy !== 'price' && inputs.sortBy !== 'quantity' && inputs.sortBy !== 'tag') {
-      inputs.sortBy = 'name';
+    let page = Math.max(1, inputs.page || 1);
+    let limit = inputs.limit || 10;
+    if (!_.isNumber(limit) || limit <= 0) {
+      limit = 10;
     }
 
-    const sortDirection = (typeof inputs.sortDirection === 'string' ? inputs.sortDirection.toUpperCase() : 'ASC') === 'DESC' ? 'DESC' : 'ASC';
+    const sortKey = inputs.sortBy || 'name';
+    const sortDirection = (typeof inputs.sortDirection === 'string' ? inputs.sortDirection.toLowerCase() : 'asc') === 'desc' ? 'desc' : 'asc';
+
+    const criteria = {};
 
     if (inputs.minPrice !== undefined || inputs.maxPrice !== undefined) {
       criteria.price = {};
@@ -73,35 +85,59 @@ module.exports = {
         criteria.quantity['<='] = inputs.maxQuantity;
       }
     }
-    let [totalCount, products] = await Promise.all([
-        Product.count(criteria),
-        Product.find(criteria)
-            .skip(skip)
-            .limit(limit)
-            .sort([
-              { [inputs.sortBy || "id"]: sortDirection },
-              { id: 'ASC' }
-            ])
-    ]);
-    const totalPages = Math.ceil(totalCount / limit);
-    if(page > totalPages){
-      page = totalPages;
-      if(page > 0){
-        skip = (page - 1) * limit;
-        products = await Product.find(criteria)
-          .skip(skip)
-          .limit(limit)
-          .sort([
-            { [inputs.sortBy]: sortDirection },
-            { id: 'ASC' }
-          ]);
-      }
+
+    const rawProducts = await Product.find(criteria);
+    let products = formatRecords(rawProducts);
+
+    if (inputs.searchTerm) {
+      const term = inputs.searchTerm.toLowerCase();
+      products = products.filter((product) => {
+        return Object.values(product).some((value) => {
+          if (value === null || value === undefined) {
+            return false;
+          }
+
+          if (_.isObject(value)) {
+            return false;
+          }
+
+          const compareValue = String(value).toLowerCase();
+          return compareValue.includes(term);
+        });
+      });
     }
-    const hasMore = page < totalPages;
+
+    const sortedProducts = _.orderBy(
+      products,
+      [(item) => {
+        const value = _.get(item, sortKey);
+        if (value === undefined || value === null) {
+          return '';
+        }
+        if (typeof value === 'string') {
+          return value.toLowerCase();
+        }
+        return value;
+      }],
+      [sortDirection]
+    );
+
+    const totalCount = sortedProducts.length;
+    const totalPages = totalCount === 0 ? 0 : Math.ceil(totalCount / limit);
+
+    if (totalPages > 0 && page > totalPages) {
+      page = totalPages;
+    }
+
+    const startIndex = (page - 1) * limit;
+    const paginatedProducts = sortedProducts.slice(startIndex, startIndex + limit);
+
+    const hasMore = totalPages > 0 ? page < totalPages : false;
     const hasPrevious = page > 1;
+
     return exits.success({
       message: 'Find OK',
-      data: products,
+      data: paginatedProducts,
       pagination: {
         page,
         limit,

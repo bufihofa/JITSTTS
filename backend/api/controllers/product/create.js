@@ -1,4 +1,4 @@
-
+const { buildCreatePayload, formatRecords, resolveDisplayName } = require('./utils');
 
 module.exports = {
 
@@ -7,57 +7,68 @@ module.exports = {
   description: 'Create a new product.',
 
   inputs: {
-    
+
     products: {
-        description: 'An array of products to create.',
-        required: true,
-        type: 'json',
-        custom: function(value) {
-        if (!_.isArray(value)) {
-            return false;
-        }
-        for (let product of value) {
-            if (!_.isObject(product) || 
-                !_.isString(product.name) || 
-                !_.isNumber(product.price) ||
-                !_.isNumber(product.quantity || 0) ||
-                (product.tag !== undefined && !_.isString(product.tag))) {
-            return false;
-            }
-        }
-        return true;
-        }
+      description: 'An array of products to create.',
+      required: true,
+      type: 'json',
+      custom: function (value) {
+        return _.isArray(value) && value.every(item => _.isObject(item) && !_.isArray(item));
+      }
     }
-    
+
   },
-  
+
   exits: {
     success: {
       description: 'OK.',
     },
+    badRequest: {
+      description: 'Invalid product data.',
+      responseType: 'badRequest',
+    },
   },
 
   fn: async function (inputs, exits) {
-    for (let product of inputs.products) {
-      product.id = undefined;
-    }
-    const done = await Product.createEach(inputs.products).fetch();
-    let content = `Đã tạo mới ${done.length} sản phẩm.`;
-    if(done.length === 1) {
-      content = 'Đã tạo mới sản phẩm "' + done[0].name + '".';
-    }
-    if(done.length > 0) {
-      Activity.create({
-        type: 'create',
-        content: content,
-        detail: done
-      })
-      .catch(err => {
-        console.log('Lỗi:', err);
-      });
+    const payloadProducts = this.req.body && _.isArray(this.req.body.products)
+      ? this.req.body.products
+      : inputs.products;
+
+    if (!_.isArray(payloadProducts) || payloadProducts.length === 0) {
+      return exits.badRequest({ message: 'Danh sách sản phẩm không hợp lệ.' });
     }
 
-    return exits.success({ message: 'Create Product OK', products: done });
+    const recordsToCreate = payloadProducts
+      .map(product => buildCreatePayload(product))
+      .filter(record => !_.isEmpty(record));
+
+    if (recordsToCreate.length === 0) {
+      return exits.badRequest({ message: 'Không có sản phẩm hợp lệ để tạo mới.' });
+    }
+
+    const createdRecords = await Product.createEach(recordsToCreate).fetch();
+    const products = formatRecords(createdRecords);
+
+    let content = `Đã tạo mới ${products.length} sản phẩm.`;
+    if (products.length === 1) {
+      const displayName = resolveDisplayName(products[0]);
+      content = displayName
+        ? `Đã tạo mới sản phẩm "${displayName}".`
+        : 'Đã tạo mới sản phẩm.';
+    }
+
+    if (products.length > 0) {
+      Activity.create({
+        type: 'create',
+        content,
+        detail: products
+      })
+        .catch(err => {
+          console.log('Lỗi:', err);
+        });
+    }
+
+    return exits.success({ message: 'Create Product OK', products });
 
   }
 

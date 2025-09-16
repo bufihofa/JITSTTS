@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import { axiosInstance } from "../../api/axiosInstance";
 import type { ButtonConfig, FormConfig, PageConfig } from "../../types/PageConfig";
 import { LuArrowDownZA, LuArrowUpAZ, LuArrowUpDown } from "react-icons/lu";
@@ -19,24 +20,24 @@ interface DynamicTableProps {
 }
 
 export const searchData = async (
-    method: string, 
-    url: string, 
+    method: string,
+    url: string,
     params?: {
         page?: number;
         limit?: number;
         searchTerm?: string;
         sortBy?: string;
         sortDirection?: string;
-    }) => 
+    }) =>
 {
     try {
         console.log(method);
         const response = await axiosInstance.get(url, {
             params
         });
-        
+
         return response.data;
-    } 
+    }
     catch (error: any) {
         console.error("Error fetching products:", error);
         return { res: [], pagination: { page: 1, totalPages: 1, totalItems: 0 } };
@@ -105,13 +106,13 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
                 totalPages: response.pagination.totalPages,
             }));
             }
-            
+
         } catch (error) {
             console.error("Failed to fetch products:", error);
         } finally {
             shouldFetch.current = true;
         }
-        
+
     };
 
     useEffect(() => {
@@ -121,7 +122,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
             page: 1,
         }));
         fetchTableData(1);
-        
+
     }, [searchQuery, sortBy, sortDirection, pagination.limit]);
     useEffect(() => {
         if (refreshKey !== undefined) {
@@ -151,7 +152,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
         setSortDirection('asc');
         }
     }
-    
+
     const dynamicTH = (by: string, label: string, col: any, sortable?: boolean) => {
         if(!sortable) {
             return <th>{label}</th>;
@@ -159,11 +160,33 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
         return <th style={col.width ? { width: `${col.width}%` } : undefined} onClick={()=>{handleSort(by)}}>{label} {sortBy==by ? (sortDirection=="asc" ? <LuArrowUpAZ className="arrow"/> : <LuArrowDownZA className="arrow"/>) : <LuArrowUpDown className="arrow-unsort"/>}</th>
 
     }
-    
-    const dynamicTD = (data: any, key: string) => {
 
-        return <td>{data[key]    || "N/A   "}</td>;
-        
+    const getCellValue = (row: Record<string, any>, key: string) => {
+        if (!key) {
+            return undefined;
+        }
+
+        return key.split('.').reduce<any>((acc, part) => {
+            if (acc === undefined || acc === null) {
+                return undefined;
+            }
+
+            return acc[part];
+        }, row);
+    }
+
+    const dynamicTD = (data: any, key: string) => {
+        const value = getCellValue(data, key);
+
+        let displayValue: ReactNode = value;
+        if (value === undefined || value === null || value === '') {
+            displayValue = 'N/A';
+        } else if (typeof value === 'boolean') {
+            displayValue = value ? 'True' : 'False';
+        }
+
+        return <td>{displayValue}</td>;
+
     }
 
     const paginationControls = useMemo(() => {
@@ -171,11 +194,11 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
             <Pagination
                 pagination={pagination}
                 gotoPage={gotoPage}
-            />  
+            />
         )
     }, [pagination, dataList]);
-  
-    
+
+
     const renderButton = (button: string) => {
         if (button === 'del') {
             return <MdDelete />;
@@ -199,11 +222,11 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
     const dynamicButtonAPI = (button: ButtonConfig, data: any) => {
         return (
             button.isShow && (
-                <button 
-                    className="dynamic-table-action" 
+                <button
+                    className="dynamic-table-action"
                     onClick={async () => {
                         await DynamicAPI(
-                            button?.api?.method || 'GET', 
+                            button?.api?.method || 'GET',
                             `${button?.api?.url}${button?.api?.suffix ? `/${data[button.api.suffix]}` : ''}`
                         );
                         if(button?.api?.refresh) {
@@ -213,7 +236,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
                 >
                     {renderButton(button.icon || "none")}
                 </button>
-                
+
             )
         )
     }
@@ -226,8 +249,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
         }
         return (
             button.isShow && (
-                <button 
-                    className="dynamic-table-action" 
+                <button
+                    className="dynamic-table-action"
                     onClick={() => {
                         if (form.initData && setInitData) {
                             console.log("Setting initial data for form:", data);
@@ -245,7 +268,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
     console.log("DynamicTable render");
     return (
         <>
-        
+
         <div className="dynamic-table-container">
             <table className="dynamic-table">
             <thead>
@@ -267,12 +290,12 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
                         dynamicTD(data, col.key)
                     )
                     ))}
-                    
+
                     <td>
                     <div className="dynamic-table-actions">
                         {buttons?.map((button) => (
                             button.isShow && checkPerm(button.permission) && (
-                                (button.openForm && button.openForm != "") ? 
+                                (button.openForm && button.openForm != "") ?
                                     dynamicButtonOpenForm(button, data) :
                                     dynamicButtonAPI(button, data)
                             )
@@ -303,7 +326,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({pageConfig, searchQuery, set
             </div>
             <div className="footer-text-select-limit">
                 <span className="footer-text-select-label">Items per page: </span>
-                <select 
+                <select
                 className="footer-text-select"
                 value={pagination.limit}
                 onChange={(e) => {
