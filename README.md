@@ -72,11 +72,11 @@ Hoặc sử dụng `node app.js` cho môi trường production.
     *   `activities` (Collection): Liên kết tới các hoạt động của người dùng này.
 
 *   **`Product`** (`api/models/Product.js`)
-    *   `name` (String): Tên sản phẩm.
-    *   `price` (Number): Giá sản phẩm.
-    *   `quantity` (Number): Số lượng tồn kho.
-    *   `tag` (String): Thẻ/danh mục của sản phẩm.
-    *   `owner` (Model): Liên kết tới model `User`, cho biết ai là người tạo ra sản phẩm.
+    *   `name` (String, optional): Tên sản phẩm.
+    *   `price` (Number, optional): Giá sản phẩm.
+    *   `quantity` (Number): Số lượng tồn kho (mặc định bằng `0`).
+    *   `tag` (String, optional): Thẻ/danh mục của sản phẩm.
+    *   `data` (JSON): Tập các trường động do người dùng cấu hình. Các khóa trong `data` được merge vào phản hồi API để thuận tiện truy cập.
 
 *   **`Activity`** (`api/models/Activity.js`)
     *   `type` (String): Loại hành động (ví dụ: `'CREATE'`, `'UPDATE'`, `'DELETE'`).
@@ -186,21 +186,23 @@ Tất cả các API đều yêu cầu `Authorization: Bearer <token>` trong head
     *   **Response (Success)**:
         ```json
         {
-          "products": [
-            { 
-              "id": "number", 
-              "name": "string", 
-              "price": "number", 
-              "quantity": "number", 
-              "tag": "string", 
-              "owner": "string" 
+          "message": "string",
+          "data": [
+            {
+              "id": "number",
+              "name": "string",
+              "price": "number",
+              "quantity": "number",
+              "tag": "string",
+              "data": { "customField": "any" },
+              "customField": "any"
             }
           ],
-          "pagination": { 
-            "page": "number", 
-            "limit": "number", 
-            "totalPages": "number", 
-            "totalProducts": "number" 
+          "pagination": {
+            "page": "number",
+            "limit": "number",
+            "totalPages": "number",
+            "totalItems": "number"
           }
         }
         ```
@@ -212,15 +214,18 @@ Tất cả các API đều yêu cầu `Authorization: Bearer <token>` trong head
         ```json
         {
           "products": [
-            { 
-              "name": "string", 
-              "price": "number", 
-              "quantity": "number", 
-              "tag": "string" 
+            {
+              "name": "string",
+              "price": "number",
+              "quantity": "number",
+              "tag": "string",
+              "data": { "sku": "string" },
+              "customField": "any"
             }
           ]
         }
         ```
+    *   **Ghi chú**: Các trường tùy chỉnh có thể được gửi trực tiếp (ví dụ `"customField"`) hoặc gói trong `data`. API sẽ lưu trữ toàn bộ và trả về các khóa đó ở cả cấp cao nhất lẫn trong `data`.
     *   **Response (Success)**:
         ```json
         {
@@ -236,12 +241,14 @@ Tất cả các API đều yêu cầu `Authorization: Bearer <token>` trong head
         ```json
         {
           "products": [
-            { 
-              "id": "number", 
-              "name": "string", 
-              "price": "number", 
-              "quantity": "number", 
-              "tag": "string" 
+            {
+              "id": "number",
+              "name": "string",
+              "price": "number",
+              "quantity": "number",
+              "tag": "string",
+              "data": { "sku": "string" },
+              "customField": "any"
             }
           ]
         }

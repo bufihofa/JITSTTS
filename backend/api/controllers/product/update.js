@@ -1,3 +1,7 @@
+const _ = require('@sailshq/lodash');
+
+const BASE_FIELDS = ['name', 'price', 'quantity', 'tag'];
+const RESERVED_FIELDS = ['id', 'createdAt', 'updatedAt'];
 
 module.exports = {
   friendlyName: 'Update',
@@ -22,50 +26,101 @@ module.exports = {
     const updateProducts = [];
     const failedProducts = [];
 
-    for (let product of products) {
-      if (!product.id) failedProducts.push(product);
-      else
-      {
-        const newProduct = {
-            id: product.id
-        };
+    const ids = products
+      .filter(product => _.isPlainObject(product) && product.id)
+      .map(product => product.id);
 
-        if (product.name !== undefined) newProduct.name = product.name;
-        if (product.price !== undefined) newProduct.price = product.price;
-        if (product.tag !== undefined) newProduct.tag = product.tag;
-        if (product.quantity !== undefined) newProduct.quantity = product.quantity;
-        
-        updateProducts.push(newProduct);
+    const existingProducts = await Product.find({ id: ids });
+    const existingMap = _.keyBy(existingProducts, 'id');
+
+    for (const product of products) {
+      if (!_.isPlainObject(product)) {
+        failedProducts.push({ ...product, error: 'Dữ liệu sản phẩm không hợp lệ.' });
+        continue;
+      }
+
+      if (!product.id) {
+        failedProducts.push({ ...product, error: 'Thiếu ID sản phẩm.' });
+        continue;
+      }
+
+      const existingProduct = existingMap[product.id];
+      if (!existingProduct) {
+        failedProducts.push({ ...product, error: 'Không tìm thấy sản phẩm.' });
+        continue;
+      }
+
+      const updatePayload = {};
+      let hasInvalidField = false;
+
+      for (const field of BASE_FIELDS) {
+        if (!_.isUndefined(product[field])) {
+          const value = product[field];
+          const validator =
+            field === 'price' || field === 'quantity'
+              ? _.isNumber
+              : _.isString;
+
+          if (!validator(value)) {
+            failedProducts.push({ ...product, error: `Trường ${field} không hợp lệ.` });
+            hasInvalidField = true;
+            break;
+          }
+
+          updatePayload[field] = value;
+        }
+      }
+
+      if (hasInvalidField) {
+        continue;
+      }
+
+      if (!_.isUndefined(product.data) && !_.isPlainObject(product.data)) {
+        failedProducts.push({ ...product, error: 'Dữ liệu cấu hình không hợp lệ.' });
+        continue;
+      }
+
+      const dynamicData = _.omit(product, [...BASE_FIELDS, 'data', ...RESERVED_FIELDS, 'id']);
+      const additionalData = _.isPlainObject(product.data) ? product.data : {};
+      let customData = _.assign({}, dynamicData, additionalData);
+
+      if (!_.isEmpty(customData)) {
+        const existingData = _.isPlainObject(existingProduct.data) ? existingProduct.data : {};
+        customData = _.assign({}, existingData, customData);
+        updatePayload.data = customData;
+      }
+
+      if (_.isEmpty(updatePayload)) {
+        failedProducts.push({ ...product, error: 'Không có dữ liệu nào để cập nhật.' });
+        continue;
+      }
+
+      const updated = await Product.updateOne({ id: product.id }).set(updatePayload);
+      if (updated) {
+        const sanitized = _.isFunction(updated.toJSON) ? updated.toJSON() : updated;
+        updateProducts.push(sanitized);
+      } else {
+        failedProducts.push({ ...product, error: 'Không cập nhật được sản phẩm.' });
       }
     }
-    
 
-    
-    
-    //update
     if (updateProducts.length > 0) {
-        await Promise.all(updateProducts.map(product => 
-          Product.updateOne({ id: product.id }).set({
-            name: product.name,
-            price: product.price,
-            tag: product.tag,
-            quantity: product.quantity
-          })
-        ));
-
         let content = `Đã cập nhật ${updateProducts.length} sản phẩm.`;
         if(updateProducts.length === 1) {
-          content = `Đã cập nhật sản phẩm "${updateProducts[0].name}".`;
+          const updatedProduct = updateProducts[0];
+          content = updatedProduct.name
+            ? `Đã cập nhật sản phẩm "${updatedProduct.name}".`
+            : `Đã cập nhật sản phẩm #${updatedProduct.id}.`;
         }
-        Activity.create({ 
+        Activity.create({
           type: 'update',
           content: content,
           detail: updateProducts
         })
         .catch(err => {
-          console.log('Lỗi:', err);
+          sails.log.error('Lỗi:', err);
         });
-        
+
     }
 
 
