@@ -1,4 +1,4 @@
-
+const { buildCreatePayload, formatRecord, resolveDisplayName } = require('./utils');
 
 module.exports = {
 
@@ -6,64 +6,47 @@ module.exports = {
 
   description: 'Create a new product.',
 
-  inputs: {
-    name: {
-      description: 'The name of the product.',
-      type: 'string',
-      required: true,
-    },
-    price: {
-      description: 'The price of the product.',
-      type: 'number',
-      required: false,
-      defaultsTo: 0
-    },
-    quantity: {
-      description: 'The quantity of the product.',
-      type: 'number',
-      required: false,
-      defaultsTo: 0
-    },
-    tag: {
-      description: 'The tag of the product.',
-      type: 'string',
-      required: false,
-    }
-    
-  },
-  
   exits: {
     success: {
       description: 'OK.',
     },
+    badRequest: {
+      description: 'Invalid payload.',
+      responseType: 'badRequest',
+    },
   },
 
   fn: async function (inputs, exits) {
-    if(!inputs.name) {
-      return exits.badRequest({ message: 'Tên sản phẩm là bắt buộc.' });
+    const payload = this.req.body || {};
+
+    if (!_.isObject(payload) || _.isArray(payload)) {
+      return exits.badRequest({ message: 'Dữ liệu sản phẩm không hợp lệ.' });
     }
-    const done = await Product.create({
-      name: inputs.name,
-      price: inputs.price,
-      quantity: inputs.quantity || 0,
-      tag: inputs.tag || ''
-    }).fetch();
 
-    content = 'Đã tạo mới sản phẩm "' + done.name + '".';
+    const recordToCreate = buildCreatePayload(payload);
 
+    if (_.isEmpty(recordToCreate)) {
+      return exits.badRequest({ message: 'Vui lòng cung cấp dữ liệu để tạo sản phẩm.' });
+    }
 
-    if(done) {
-      Activity.create({
-        type: 'create',
-        content: content,
-        detail: done
-      })
+    const createdRecord = await Product.create(recordToCreate).fetch();
+    const product = formatRecord(createdRecord);
+
+    const displayName = resolveDisplayName(product);
+    const content = displayName
+      ? `Đã tạo mới sản phẩm "${displayName}".`
+      : 'Đã tạo mới sản phẩm.';
+
+    Activity.create({
+      type: 'create',
+      content,
+      detail: product
+    })
       .catch(err => {
         console.log('Lỗi:', err);
       });
-    }
 
-    return exits.success({ message: 'Create Product OK', products: done });
+    return exits.success({ message: 'Create Product OK', products: product });
 
   }
 

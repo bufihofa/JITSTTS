@@ -1,3 +1,4 @@
+const { formatRecords, resolveDisplayName } = require('./utils');
 
 module.exports = {
   friendlyName: 'Delete',
@@ -7,7 +8,7 @@ module.exports = {
       required: true,
       type: 'json',
       custom: function(value) {
-        return _.isArray(value)
+        return _.isArray(value);
       }
     }
   },
@@ -17,31 +18,35 @@ module.exports = {
     }
   },
   fn: async function(inputs, exits) {
-    const user = this.req.user;
     const productIds = inputs.products;
-    
+
     const products = await Product.find({
       id: productIds.map(p => p),
     });
 
-    const productsToDelete = await Product.destroy({
+    const formattedProducts = formatRecords(products);
+
+    await Product.destroy({
       id: productIds.map(p => p),
     });
-    let content = `Đã xóa ${products.length} sản phẩm.`;
-    if(products && products.length === 1) {
-      content = 'Đã xóa sản phẩm "' + products[0].name + '".';
+    let content = `Đã xóa ${formattedProducts.length} sản phẩm.`;
+    if (formattedProducts && formattedProducts.length === 1) {
+      const displayName = resolveDisplayName(formattedProducts[0]);
+      content = displayName
+        ? `Đã xóa sản phẩm "${displayName}".`
+        : 'Đã xóa sản phẩm.';
     }
-    if(productIds.length > 0) {
+    if (productIds.length > 0) {
       Activity.create({
         type: 'delete',
-        content: content,
-        detail: products
+        content,
+        detail: formattedProducts
       })
       .catch(err => {
         console.log('Lỗi:', err);
       });
     }
 
-    return exits.success({ message: 'Xóa sản phẩm thành công.', deletedProducts: products });
+    return exits.success({ message: 'Xóa sản phẩm thành công.', deletedProducts: formattedProducts });
   }
-}
+};
